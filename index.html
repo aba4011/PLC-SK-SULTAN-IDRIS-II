@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PLC OPR Generator - SK Sultan Idris II</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <!-- LOADING OVERLAY -->
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="spinner"></div>
+    <p id="loadingText">Sila tunggu...</p>
+  </div>
+
+  <!-- RESTORE DRAFT BANNER -->
+  <div id="draftBanner" class="draft-banner hidden">
+    <span>Draf laporan yang belum disimpan dijumpai. Adakah anda ingin memulihkannya?</span>
+    <div class="draft-buttons">
+      <button type="button" id="btnRestoreDraft" class="btn btn-sm btn-success">Pulihkan</button>
+      <button type="button" id="btnDiscardDraft" class="btn btn-sm btn-danger">Abaikan</button>
+    </div>
+  </div>
+
+  <!-- HEADER APLIKASI WEB -->
+  <header class="app-header">
+    <div class="header-container">
+      <img src="https://i.ibb.co/LdWxSJSM/logo-sksi2.png" alt="Lencana SK Sultan Idris II" class="app-logo">
+      <div class="header-text">
+        <h1>PLC ONE PAGE REPORT GENERATOR</h1>
+        <h2>SK SULTAN IDRIS II</h2>
+        <p>Jalan Tun Abdul Razak, 33000 Kuala Kangsar, Perak</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    
+    <!-- NOTIFIKASI TOAST -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- BORANG UTAMA PLC -->
+    <section id="formSection" class="card-section">
+      <div class="intro-box">
+        <h3>Selamat Datang ke PLC One Page Report Generator</h3>
+        <p>Lengkapkan maklumat Professional Learning Community (PLC) di bawah untuk menjana One Page Report (OPR) secara automatik dalam format A4 rasmi.</p>
+      </div>
+
+      <form id="oprForm" novalidate>
+        
+        <!-- SECTION A: MAKLUMAT PLC -->
+        <fieldset class="form-group-box">
+          <legend>A. MAKLUMAT UTAMA PLC</legend>
+          
+          <div class="form-row">
+            <div class="form-col">
+              <label for="plcStrategy" class="required">Strategi PLC</label>
+              <div class="custom-select-wrapper">
+                <input type="text" id="plcStrategySearch" placeholder="🔍 Cari / Pilih Strategi PLC..." autocomplete="off">
+                <ul id="plcStrategyOptions" class="custom-select-options hidden"></ul>
+                <input type="hidden" id="plcStrategy" name="plcStrategy" required>
+              </div>
+            </div>
+
+            <div class="form-col">
+              <label for="plcFocus" class="required">Tajuk / Fokus</label>
+              <input type="text" id="plcFocus" name="plcFocus" placeholder="Contoh: Penggunaan AI dalam PdP" required maxlength="150">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-col">
+              <label for="plcDate" class="required">Tarikh</label>
+              <input type="date" id="plcDate" name="plcDate" required>
+            </div>
+            
+            <div class="form-col">
+              <label for="startTime" class="required">Masa Mula</label>
+              <input type="time" id="startTime" name="startTime" required>
+            </div>
+
+            <div class="form-col">
+              <label for="endTime" class="required">Masa Tamat</label>
+              <input type="time" id="endTime" name="endTime" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-col">
+              <label for="plcLocation" class="required">Tempat</label>
+              <input type="text" id="plcLocation" name="plcLocation" placeholder="Contoh: Bilik Mesyuarat SK Sultan Idris II" required maxlength="100">
+            </div>
+
+            <div class="form-col">
+              <label for="groupName" class="required">Nama Kumpulan</label>
+              <input type="text" id="groupName" name="groupName" placeholder="Contoh: Panitia Bahasa Melayu" required maxlength="100">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-col">
+              <label for="groupLeader" class="required">Ketua Kumpulan</label>
+              <div class="custom-select-wrapper">
+                <input type="text" id="groupLeaderSearch" class="teacher-search-input" placeholder="🔍 Cari Ketua Kumpulan..." autocomplete="off">
+                <ul id="groupLeaderOptions" class="custom-select-options hidden"></ul>
+                <input type="hidden" id="groupLeader" name="groupLeader" required>
+              </div>
+            </div>
+
+            <div class="form-col">
+              <label for="preparedBy" class="required">Disediakan Oleh</label>
+              <div class="custom-select-wrapper">
+                <input type="text" id="preparedBySearch" class="teacher-search-input" placeholder="🔍 Cari Nama Guru..." autocomplete="off">
+                <ul id="preparedByOptions" class="custom-select-options hidden"></ul>
+                <input type="hidden" id="preparedBy" name="preparedBy" required>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- SECTION B: AHLI KUMPULAN -->
+        <fieldset class="form-group-box">
+          <legend>B. AHLI KUMPULAN PLC</legend>
+          <p class="field-hint">Sila pilih ahli-ahli kumpulan. Minimum 1 ahli disyorkan. (Maksimum 30 orang)</p>
+          
+          <div id="membersContainer" class="members-container">
+            <!-- Dynamic Member Rows will be appended here -->
+          </div>
+
+          <button type="button" id="btnAddMember" class="btn btn-secondary btn-sm">+ TAMBAH AHLI</button>
+        </fieldset>
+
+        <!-- SECTION C-G: KANDUNGAN PLC -->
+        <fieldset class="form-group-box">
+          <legend>C - G. KANDUNGAN LAPORAN</legend>
+          
+          <div class="form-col-full">
+            <label for="plcIssue" class="required">C. ISU / MASALAH</label>
+            <textarea id="plcIssue" name="plcIssue" maxlength="500" placeholder="Nyatakan isu, masalah atau keperluan yang menjadi fokus PLC..." required></textarea>
+            <div class="char-counter"><span id="plcIssueCounter">0</span> / 500</div>
+          </div>
+
+          <div class="form-col-full">
+            <label for="plcObjective" class="required">D. OBJEKTIF</label>
+            <textarea id="plcObjective" name="plcObjective" maxlength="500" placeholder="Nyatakan objektif pelaksanaan aktiviti PLC..." required></textarea>
+            <div class="char-counter"><span id="plcObjectiveCounter">0</span> / 500</div>
+          </div>
+
+          <div class="form-col-full">
+            <label for="plcImplementation" class="required">E. PELAKSANAAN</label>
+            <textarea id="plcImplementation" name="plcImplementation" maxlength="1000" placeholder="Terangkan langkah-langkah ringkas pelaksanaan aktiviti..." required></textarea>
+            <div class="char-counter"><span id="plcImplementationCounter">0</span> / 1000</div>
+          </div>
+
+          <div class="form-col-full">
+            <label for="plcImpact" class="required">F. IMPAK / HASIL</label>
+            <textarea id="plcImpact" name="plcImpact" maxlength="700" placeholder="Nyatakan impak atau hasil yang dicapai selepas program..." required></textarea>
+            <div class="char-counter"><span id="plcImpactCounter">0</span> / 700</div>
+          </div>
+
+          <div class="form-col-full">
+            <label for="plcFollowup" class="required">G. TIINDAKAN SUSULAN</label>
+            <textarea id="plcFollowup" name="plcFollowup" maxlength="500" placeholder="Nyatakan tindakan susulan yang akan dilaksanakan..." required></textarea>
+            <div class="char-counter"><span id="plcFollowupCounter">0</span> / 500</div>
+          </div>
+        </fieldset>
+
+        <!-- SECTION H: DOKUMENTASI (GAMBAR) -->
+        <fieldset class="form-group-box">
+          <legend>H. DOKUMENTASI PLC (0 – 3 GAMBAR)</legend>
+          <p class="field-hint">Muat naik sehingga 3 gambar aktiviti PLC yang dijalankan. JPG, PNG, WEBP sahaja (Max 5MB/gambar).</p>
+          
+          <div class="image-upload-grid">
+            <!-- Gambar 1 -->
+            <div class="image-upload-card" id="imgCard1">
+              <label>GAMBAR 1</label>
+              <div class="preview-box" id="previewBox1">
+                <span class="preview-placeholder">Tiada Gambar</span>
+                <img id="imgDisplay1" class="hidden" alt="Gambar 1">
+              </div>
+              <input type="file" id="fileInput1" accept="image/jpeg,image/png,image/webp" class="file-input">
+              <input type="text" id="caption1" placeholder="Caption (Optional)" class="caption-input">
+              <div id="fileInfo1" class="file-info"></div>
+              <button type="button" id="btnRemoveImg1" class="btn btn-xs btn-danger hidden">REMOVE</button>
+            </div>
+
+            <!-- Gambar 2 -->
+            <div class="image-upload-card" id="imgCard2">
+              <label>GAMBAR 2</label>
+              <div class="preview-box" id="previewBox2">
+                <span class="preview-placeholder">Tiada Gambar</span>
+                <img id="imgDisplay2" class="hidden" alt="Gambar 2">
+              </div>
+              <input type="file" id="fileInput2" accept="image/jpeg,image/png,image/webp" class="file-input">
+              <input type="text" id="caption2" placeholder="Caption (Optional)" class="caption-input">
+              <div id="fileInfo2" class="file-info"></div>
+              <button type="button" id="btnRemoveImg2" class="btn btn-xs btn-danger hidden">REMOVE</button>
+            </div>
+
+            <!-- Gambar 3 -->
+            <div class="image-upload-card" id="imgCard3">
+              <label>GAMBAR 3</label>
+              <div class="preview-box" id="previewBox3">
+                <span class="preview-placeholder">Tiada Gambar</span>
+                <img id="imgDisplay3" class="hidden" alt="Gambar 3">
+              </div>
+              <input type="file" id="fileInput3" accept="image/jpeg,image/png,image/webp" class="file-input">
+              <input type="text" id="caption3" placeholder="Caption (Optional)" class="caption-input">
+              <div id="fileInfo3" class="file-info"></div>
+              <button type="button" id="btnRemoveImg3" class="btn btn-xs btn-danger hidden">REMOVE</button>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- FORM ACTION BUTTONS -->
+        <div class="form-actions">
+          <button type="button" id="btnSaveDraft" class="btn btn-secondary">SAVE DRAFT</button>
+          <button type="button" id="btnReset" class="btn btn-danger">RESET</button>
+          <button type="submit" id="btnGenerate" class="btn btn-primary">GENERATE OPR</button>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- SECTION OPR PREVIEW & PRINT DOKUMEN -->
+    <section id="previewSection" class="preview-section hidden">
+      
+      <!-- TOOLBAR APLIKASI -->
+      <div class="preview-toolbar no-print">
+        <button type="button" id="btnEditOpr" class="btn btn-secondary">← EDIT OPR</button>
+        <button type="button" id="btnPrintOpr" class="btn btn-primary">PRINT OPR</button>
+        <button type="button" id="btnDownloadPdf" class="btn btn-success">DOWNLOAD PDF</button>
+        <button type="button" id="btnShareOpr" class="btn btn-info">SHARE</button>
+        <a id="btnDriveUrl" href="#" target="_blank" class="btn btn-dark hidden">OPEN GOOGLE DRIVE</a>
+      </div>
+
+      <!-- KAWASAN LEMBARAN A4 PORTRAIT -->
+      <div class="a4-page-wrapper">
+        <div id="oprPaper" class="a4-page">
+          
+          <!-- OPR HEADER -->
+          <div class="opr-header">
+            <img src="https://i.ibb.co/LdWxSJSM/logo-sksi2.png" alt="Lencana Sekolah" class="opr-logo">
+            <div class="opr-school-name">SK SULTAN IDRIS II</div>
+            <div class="opr-school-address">JALAN TUN ABDUL RAZAK, 33000 KUALA KANGSAR</div>
+            <div class="opr-title-main">ONE PAGE REPORT (OPR)</div>
+            <div class="opr-title-sub">PROFESSIONAL LEARNING COMMUNITY (PLC)</div>
+            <div class="opr-id-badge">OPR ID: <span id="outOprId">OPR-PLC-YYYYMMDD-XXXX</span></div>
+          </div>
+
+          <!-- OPR CONTENT BODY -->
+          <div class="opr-body">
+            
+            <!-- A. MAKLUMAT PLC TABLE -->
+            <div class="opr-section-title">A. MAKLUMAT PLC</div>
+            <table class="opr-table">
+              <tr>
+                <td class="lbl-col">Strategi PLC</td>
+                <td id="outStrategy" class="val-col"></td>
+                <td class="lbl-col">Tarikh</td>
+                <td id="outDate" class="val-col"></td>
+              </tr>
+              <tr>
+                <td class="lbl-col">Tajuk / Fokus</td>
+                <td id="outFocus" class="val-col" colspan="3"></td>
+              </tr>
+              <tr>
+                <td class="lbl-col">Masa</td>
+                <td id="outTime" class="val-col"></td>
+                <td class="lbl-col">Tempat</td>
+                <td id="outLocation" class="val-col"></td>
+              </tr>
+              <tr>
+                <td class="lbl-col">Nama Kumpulan</td>
+                <td id="outGroupName" class="val-col"></td>
+                <td class="lbl-col">Ketua Kumpulan</td>
+                <td id="outGroupLeader" class="val-col"></td>
+              </tr>
+            </table>
+
+            <!-- B. AHLI KUMPULAN -->
+            <div class="opr-section-title">B. AHLI KUMPULAN</div>
+            <div id="outMembersList" class="opr-members-grid"></div>
+
+            <!-- C - G. KANDUNGAN LAPORAN -->
+            <div class="opr-section-title">C. ISU / MASALAH</div>
+            <div id="outIssue" class="opr-text-block"></div>
+
+            <div class="opr-section-title">D. OBJEKTIF</div>
+            <div id="outObjective" class="opr-text-block"></div>
+
+            <div class="opr-section-title">E. PELAKSANAAN</div>
+            <div id="outImplementation" class="opr-text-block"></div>
+
+            <div class="opr-section-title">F. IMPAK / HASIL</div>
+            <div id="outImpact" class="opr-text-block"></div>
+
+            <div class="opr-section-title">G. TINDAKAN SUSULAN</div>
+            <div id="outFollowup" class="opr-text-block"></div>
+
+            <!-- H. DOKUMENTASI GAMBAR -->
+            <div class="opr-section-title">H. DOKUMENTASI PLC</div>
+            <div id="outImageGrid" class="opr-images-grid"></div>
+
+            <!-- DISEDIAKAN OLEH -->
+            <div class="opr-signature-block">
+              <div class="sig-title">Disediakan oleh:</div>
+              <div class="sig-space"></div>
+              <div id="outPreparedBy" class="sig-name">......................................................</div>
+              <div class="sig-school">SK Sultan Idris II</div>
+            </div>
+
+          </div>
+
+          <!-- OPR FOOTER -->
+          <div class="opr-footer">
+            <span id="outFooterId">OPR-PLC-YYYYMMDD-XXXX</span> | SK SULTAN IDRIS II
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="./config.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>
