@@ -5,8 +5,8 @@
 
 const CONFIG = {
   // Masukkan URL Google Apps Script Web App yang telah di-deploy di sini:
-  // Contoh: "https://script.google.com/macros/s/AKfycbx.../exec"
-  GOOGLE_APPS_SCRIPT_URL: "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE",
+  // Contoh: "https://script.google.com/macros/s/AKfycbyT-wbCjWjJ11tIYD8fkPiBfxwf-r6XaV5PvHrB4W0p_X6y1Vbi_jx2spYOJundVj1h/exec"
+  GOOGLE_APPS_SCRIPT_URL: "1aDoQrGklEhmFUdCfj1sz09vCdFZVM0Ni",
   
   // Konfigurasi Asas Sekolah
   SCHOOL_NAME: "SK SULTAN IDRIS II",
