@@ -3,7 +3,7 @@ const SPREADSHEET_ID = "1HdgiIIYL--Ex7I7Hu_nhPadOHfYr4YG15lo7_knfSw4";
 const DRIVE_FOLDER_ID = "1aDoQrGklEhmFUdCfj1sz09vCdFZVM0Ni";
 
 function doGet(e) {
-  const action = e.parameter.action;
+  const action = e ? e.parameter.action : null;
   if (action === 'getTeachers') {
     return handleGetTeachers();
   }
@@ -26,6 +26,7 @@ function handleGetTeachers() {
   try {
     const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     const sheet = ss.getSheetByName("SENARAI_GURU");
+    
     if (!sheet) {
       return ContentService.createTextOutput(JSON.stringify({
         success: false, 
@@ -40,12 +41,13 @@ function handleGetTeachers() {
     for (let i = 1; i < data.length; i++) {
       const nama = data[i][1];
       const status = data[i][2];
-      if (status === "Aktif" && nama) {
+      
+      // Semakan lebih fleksibel: buang jarak kosong & abaikan saiz huruf (aktif/Aktif/AKTIF)
+      if (status && String(status).trim().toLowerCase() === "aktif" && nama) {
         teachers.push(String(nama).trim());
       }
     }
 
-    // Format JSON respons tepat mengikut spesifikasi API
     return ContentService.createTextOutput(JSON.stringify({
       success: true,
       teachers: teachers
@@ -110,7 +112,7 @@ function handleSaveOPR(data) {
       data.tempat,
       data.kumpulan,
       data.ketua,
-      data.ahli.join(", "),
+      Array.isArray(data.ahli) ? data.ahli.join(", ") : data.ahli,
       data.disediakan,
       data.isu,
       data.objektif,
