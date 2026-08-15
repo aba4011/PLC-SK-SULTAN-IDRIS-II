@@ -1,525 +1,390 @@
-:root {
-  --navy: #160A55;
-  --gold: #C9A13B;
-  --white: #ffffff;
-  --bg-gray: #f4f6f9;
-  --border-gray: #cccccc;
-  --red: #d9534f;
-}
+/* ==========================================
+   STYLING BORANG OPR SK SULTAN IDRIS II
+   ========================================== */
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: 'Poppins', Arial, sans-serif;
 }
 
 body {
-  font-family: 'Montserrat', sans-serif;
-  background-color: var(--bg-gray);
+  background-color: #383c4a;
   color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 20px;
 }
 
-/* LAYOUT CONTAINER */
+/* LAYOUT UTAMA CONTAINER */
 .app-container {
   display: flex;
   flex-direction: row;
-  height: 100vh;
-  overflow: hidden;
+  width: 100%;
+  max-width: 1600px;
+  gap: 25px;
 }
 
-/* FORM PANEL (LEFT) */
-.form-panel {
-  width: 450px;
-  min-width: 400px;
-  background: var(--white);
-  border-right: 2px solid var(--border-gray);
-  padding: 20px;
+/* ==========================================
+   BAHAGIAN KIRI: BORANG INPUT
+   ========================================== */
+.form-section {
+  width: 40%;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  padding: 25px;
+  max-height: 92vh;
   overflow-y: auto;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
-.form-header {
-  border-bottom: 2px solid var(--navy);
-  padding-bottom: 10px;
-  margin-bottom: 15px;
+.header-title h2 {
+  color: #1a237e;
+  font-size: 20px;
+  font-weight: 800;
 }
 
-.form-header h2 { color: var(--navy); font-size: 1.4rem; }
-.form-header p { color: var(--gold); font-weight: bold; }
-
-fieldset {
-  border: 1px solid var(--border-gray);
-  padding: 12px;
-  border-radius: 6px;
-  margin-bottom: 15px;
+.header-title p {
+  color: #555;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 20px;
 }
 
-legend {
-  font-weight: bold;
-  color: var(--navy);
-  padding: 0 6px;
+.form-group {
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  background-color: #ffffff;
 }
 
-.form-group { margin-bottom: 10px; }
-.form-row { display: flex; gap: 10px; }
-.form-row .form-group { flex: 1; }
+.form-group legend {
+  font-weight: 700;
+  color: #1a237e;
+  padding: 0 8px;
+  font-size: 14px;
+}
 
 label {
   display: block;
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 10px;
   margin-bottom: 4px;
+  color: #222;
+  text-transform: uppercase;
 }
 
-input, select, textarea {
+input[type="text"],
+input[type="date"],
+input[type="time"],
+select,
+textarea {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #aaa;
-  border-radius: 4px;
-  font-size: 0.85rem;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 13px;
+  outline: none;
+  background-color: #fff;
+  transition: border-color 0.2s;
 }
 
-input:disabled {
-  background-color: #e9ecef;
-  cursor: not-allowed;
+input:focus, select:focus, textarea:focus {
+  border-color: #1a237e;
 }
 
-textarea { resize: vertical; }
-
-.error-msg {
-  color: var(--red);
-  font-size: 0.75rem;
-  font-weight: bold;
-  display: block;
-  margin-top: 2px;
-}
-
-.ahli-row {
+.form-row {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin-bottom: 8px;
-  background: #f8f9fa;
-  padding: 6px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.ahli-input-group {
-  display: flex;
-  gap: 5px;
-}
-
-.btn-primary, .btn-secondary, .btn-danger, .btn-action {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.btn-primary { background: var(--navy); color: var(--white); }
-.btn-secondary { background: var(--gold); color: var(--white); width: 100%; margin-top: 5px; }
-.btn-secondary:disabled { background: #ccc; cursor: not-allowed; }
-.btn-danger { background: var(--red); color: var(--white); }
-.btn-action { background: var(--navy); color: var(--gold); text-decoration: none; display: inline-block; }
-
-.btn-xs { font-size: 0.7rem; padding: 2px 6px; border: none; border-radius: 2px; cursor: pointer; }
-.btn-crop { background: var(--navy); color: #fff; }
-.btn-remove { background: var(--red); color: #fff; }
-
-.form-actions { display: flex; gap: 10px; margin-top: 15px; }
-.form-actions button { flex: 1; }
-
-.photo-upload-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
 
-.upload-box {
-  border: 1px dashed var(--navy);
-  padding: 8px;
-  border-radius: 4px;
-  background: #fafafa;
+.form-row > div {
+  flex: 1;
 }
 
-/* PREVIEW PANEL (RIGHT) */
-.preview-panel {
-  flex: 1;
-  background: #525659;
-  overflow: auto;
+.input-with-btn {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+/* BUTTON STYLES */
+.btn-primary {
+  width: 100%;
+  background-color: #1a237e;
+  color: white;
+  border: none;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  text-transform: uppercase;
+}
+
+.btn-primary:hover {
+  background-color: #0d145a;
+}
+
+.btn-secondary {
+  width: 100%;
+  background-color: #c5a059;
+  color: white;
+  border: none;
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 5px;
+  margin-bottom: 12px;
+}
+
+.btn-secondary:hover {
+  background-color: #a88442;
+}
+
+.btn-remove {
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  padding: 0 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* ==========================================
+   BAHAGIAN KANAN: PREVIEW CANVAS OPR
+   ========================================== */
+.preview-section {
+  width: 60%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
 }
 
-.preview-toolbar { margin-bottom: 15px; display: flex; gap: 10px; }
+.top-action-bar {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  width: 100%;
+  max-width: 800px;
+  justify-content: flex-end;
+}
 
-/* ==========================================
-   FIXED A4 CANVAS SETUP (SEPADAN REKABENTUK IMEJ 2)
-   ========================================== */
-.a4-page {
-  width: 210mm;
-  height: 297mm;
-  background: var(--white);
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  padding: 0 12mm 0 12mm !important;
+.btn-action {
+  background-color: #1a237e;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-weight: 700;
+  font-size: 13px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* REKABENTUK KERTAS OPR (A4 RATIO) */
+.opr-paper {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 800px;
+  min-height: 1100px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   display: flex;
   flex-direction: column;
-  position: relative;
-  overflow: hidden;
+  justify-content: space-between;
   box-sizing: border-box;
 }
 
-/* JALUR BIRU GELAP PALING ATAS */
-.top-navy-bar {
-  width: calc(100% + 24mm);
-  height: 12px;
-  background-color: #0f1035 !important;
-  margin-left: -12mm;
-  margin-right: -12mm;
-  margin-bottom: 6px;
-  -webkit-print-color-adjust: exact !important;
-  print-color-adjust: exact !important;
-}
-
-/* HEADER & LOGO */
-.opr-header {
-  position: relative;
+/* HEADER OPR */
+.paper-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin-bottom: 6px;
+  gap: 15px;
+  border-bottom: 3px solid #1a237e;
+  padding-bottom: 12px;
+  margin-bottom: 15px;
 }
 
-.opr-logo {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 75px !important;
-  height: 85px !important;
-  object-fit: contain;
+.school-logo {
+  width: 75px;
+  height: auto;
 }
 
-.opr-header-center {
-  width: 100%;
+.school-details {
   text-align: center;
+  flex: 1;
 }
 
-/* TAJUK SEKOLAH SAMA IMEJ 2 */
-.school-title {
-  font-family: 'Cinzel', serif;
-  font-size: 26pt !important;
-  font-weight: 700;
-  color: #111;
-  line-height: 1.0;
-  letter-spacing: 0.5px;
-  margin: 0;
-  transform: scaleY(1.1);
-}
-
-.ornament-divider {
-  width: 65%;
-  height: 1.5px;
-  background: linear-gradient(to right, transparent, #c9a13b, #0f1035, #c9a13b, transparent);
-  margin: 3px auto;
-}
-
-.school-address {
-  font-size: 8.5pt !important;
-  font-weight: 600;
-  color: #333;
-  letter-spacing: 0.2px;
-  margin: 0;
+.school-details h1 {
+  font-size: 26px;
+  font-weight: 800;
+  color: #1a237e;
   line-height: 1.1;
 }
 
-.school-tagline {
-  font-size: 8pt !important;
-  font-weight: bold;
-  color: #d9534f !important;
-  margin-top: 1px;
-  margin-bottom: 2px;
+.school-details .address {
+  font-size: 10px;
+  color: #444;
+  font-weight: 600;
+}
+
+.school-details .tagline {
+  font-size: 11px;
+  color: #d32f2f;
+  font-weight: 700;
 }
 
 .opr-main-title {
-  font-family: 'Cinzel', serif;
-  font-size: 22pt !important;
-  font-weight: 700;
-  color: #111;
-  letter-spacing: 0.5px;
-  line-height: 1.0;
+  font-size: 24px;
+  font-weight: 800;
+  color: #1a237e;
   margin-top: 4px;
-  margin-bottom: 2px;
-  transform: scaleY(1.1);
+  letter-spacing: 1px;
 }
 
-.opr-strategi-label {
-  font-size: 9.5pt !important;
-  font-weight: 600;
-  color: #55547a;
-  text-align: left;
-  margin-left: 105px; /* Alignment persis Imej 2 */
-  margin-top: 2px;
-  margin-bottom: 4px;
+.prepared-by-header {
+  font-size: 9px;
+  color: #666;
+  font-style: italic;
 }
 
-/* KAD UTAMA OPR IMEJ 2 (HERO BANNER) */
-.opr-main-panel {
-  position: relative;
-  overflow: hidden;
-  border-radius: 12px !important;
-  padding: 12px 14px !important;
-  color: var(--white) !important;
+/* KOTAK MAKLUMAT UTAMA & GAMBAR */
+.main-info-box {
+  background-color: #2b303a;
+  color: white;
+  border-radius: 12px;
+  padding: 15px;
   display: flex;
-  gap: 12px;
-  min-height: 88mm !important;
-  margin-bottom: 12px;
-  -webkit-print-color-adjust: exact !important;
-  print-color-adjust: exact !important;
+  gap: 15px;
+  margin-bottom: 15px;
 }
 
-.bg-card-img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 1;
+.info-left-panel {
+  width: 45%;
 }
 
-.bg-card-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(18, 14, 55, 0.88); /* Warna gelap persis Imej 2 */
-  z-index: 2;
-}
-
-.panel-info {
-  position: relative;
-  z-index: 3;
-  flex: 1.1;
-  font-size: 8.5pt;
-  color: var(--white);
-}
-
-.panel-info h3 {
-  font-family: 'Cinzel', serif;
-  color: var(--gold);
-  font-size: 18pt !important;
+.plc-title-display {
+  background-color: #1a237e;
+  color: white;
+  padding: 6px 10px;
+  font-size: 12px;
   font-weight: 700;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.plc-details-list p {
+  font-size: 10.5px;
   margin-bottom: 4px;
-  line-height: 1.1;
+  line-height: 1.3;
 }
 
-.gold-line {
-  width: 100%;
-  height: 1.5px;
-  background-color: var(--gold);
-  margin-bottom: 8px;
+.ahli-preview-list {
+  list-style: none;
+  font-size: 10px;
+  padding-left: 5px;
+
 }
 
-.info-line {
-  font-size: 8.5pt !important;
-  line-height: 1.4;
-  margin-bottom: 2px;
-  color: #ffffff;
+.ahli-preview-list li {
+  line-height: 1.3;
 }
 
-.pv-ahli-wrapper {
-  margin-top: 4px;
+.info-right-panel {
+  width: 55%;
 }
 
-.pv-ahli-list {
-  list-style-type: none;
-  padding-left: 10px;
-  font-size: 8.5pt;
-  max-height: 42mm;
-  overflow: hidden;
-}
-
-.pv-ahli-list li {
-  line-height: 1.35;
-  color: #ffffff;
-}
-
-/* PETAK GAMBAR (DESIGN IMEJ 2 WITH ROUNDED CORNERS) */
-.panel-photos {
-  position: relative;
-  z-index: 3;
-  flex: 0.9;
+.image-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  gap: 10px;
+  gap: 8px;
+  height: 100%;
+  min-height: 180px;
 }
 
-.photo-slot {
-  background: #e3f2fd; /* Biru cair placeholder persis Imej 2 */
-  border: none;
-  border-radius: 10px !important;
+.img-slot {
+  border: 1.5px dashed #777;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 11px;
+  color: #aaa;
+  background-color: rgba(255,255,255,0.05);
   overflow: hidden;
-  box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
 }
 
-.photo-slot img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
+/* KANDUNGAN LAPORAN (GRID KOTAK) */
+.content-grid-container {
+  display: flex;
+  gap: 15px;
+  flex: 1;
 }
 
-.ph-label {
-  display: none;
-}
-
-/* BAHAGIAN KOTAK LAPORAN (BADGES SEPERTI IMEJ 2) */
-.opr-boxes-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px 24px !important;
-  margin-top: 5px;
-  flex: 1; /* Mengisi ruang kosong ke bawah */
-  align-content: start;
-}
-
-.opr-box {
-  border: none !important;
-  background: transparent !important;
-  padding: 0 !important;
+.content-col {
+  width: 50%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  gap: 12px;
 }
 
-.opr-box.box-empty {
-  visibility: hidden; /* Membiarkan ruang kanan bawah kosong persis Imej 2 */
+.content-box {
+  border: 1.5px solid #1a237e;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #fff;
 }
 
-/* BADGE TAJUK KOTAK (ROUNDED GOLDEN BADGE EXACT MATCH IMEJ 2) */
-.badge-title {
-  display: inline-block;
-  font-family: 'Roboto Condensed', 'Arial Narrow', sans-serif;
-  font-size: 11pt !important;
-  font-weight: 700;
-  color: #160A55 !important;
-  background: #ffffff !important;
-  border: 1.5px solid #c9a13b !important;
-  border-radius: 6px !important;
-  padding: 4px 20px !important;
-  margin: 0 0 6px 0 !important;
+.content-box-title {
+  background-color: #fff;
+  color: #1a237e;
+  border-bottom: 1.5px solid #1a237e;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 8px;
   text-align: center;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  min-width: 160px;
-  -webkit-print-color-adjust: exact !important;
-  print-color-adjust: exact !important;
 }
 
-.badge-tindakan {
-  text-transform: none !important; /* "Tindakan Susulan" dalam Sentence Case seperti Imej 2 */
-  font-family: 'Montserrat', sans-serif !important;
+.content-box-body {
+  padding: 8px;
+  font-size: 10px;
+  color: #333;
+  min-height: 50px;
+  white-space: pre-line;
 }
 
-/* TEKS KANDUNGAN DI BAWAH BADGE */
-.box-content {
-  font-size: 9.5pt !important;
-  line-height: 1.45;
-  color: #222222;
-  width: 100%;
-  white-space: pre-wrap;
-  word-break: break-word;
-  padding-left: 4px;
+/* FOOTER OPR */
+.paper-footer {
+  margin-top: 15px;
 }
 
-/* TEKS "DISEDIAKAN OLEH" DI TENGAH-TENGAH (CENTERED) */
-.opr-signature {
-  margin-top: auto; /* Push rapat ke atas footer */
+.signature-line {
+  font-size: 10px;
+  font-weight: 700;
+  color: #333;
+  text-align: right;
+  border-bottom: 1px dotted #888;
+  padding-bottom: 5px;
   margin-bottom: 10px;
-  font-size: 9pt;
+}
+
+.motto-bar {
+  background-color: #1a237e;
+  color: white;
   text-align: center;
-  color: #444;
-  font-family: sans-serif;
-}
-
-.sig-name {
-  font-weight: 600;
-  margin-top: 2px;
-  color: #111;
-}
-
-/* JALUR BIRU GELAP FOOTER DI PALING DASAR KERTAS */
-.opr-footer {
-  width: calc(100% + 24mm) !important;
-  background-color: #0f1035 !important;
-  color: #ffffff !important;
-  text-align: center;
-  font-size: 9pt !important;
-  font-weight: 700;
-  letter-spacing: 2px;
-  padding: 8px 0;
-  margin-left: -12mm !important;
-  margin-right: -12mm !important;
-  margin-top: 0;
-  margin-bottom: 0 !important;
-  -webkit-print-color-adjust: exact !important;
-  print-color-adjust: exact !important;
-}
-
-/* PRINT SETTINGS */
-@media print {
-  @page {
-    size: A4 portrait;
-    margin: 0;
-  }
-  
-  body {
-    background: white !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-
-  body * {
-    visibility: hidden;
-  }
-
-  .no-print, .form-panel, .preview-toolbar {
-    display: none !important;
-  }
-
-  .app-container {
-    display: block !important;
-    height: auto !important;
-  }
-
-  .preview-panel {
-    padding: 0 !important;
-    background: white !important;
-    overflow: visible !important;
-  }
-
-  #oprPreviewCanvas, #oprPreviewCanvas * {
-    visibility: visible;
-  }
-
-  #oprPreviewCanvas {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 210mm !important;
-    height: 297mm !important;
-    box-shadow: none !important;
-    margin: 0 !important;
-  }
+  padding: 6px;
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 1.5px;
 }
