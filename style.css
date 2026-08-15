@@ -158,85 +158,107 @@ textarea { resize: vertical; }
 .preview-toolbar { margin-bottom: 15px; display: flex; gap: 10px; }
 
 /* ==========================================
-   FIXED A4 CANVAS SETUP (KEMAS KINI STRUKTUR)
+   FIXED A4 CANVAS SETUP (PADAT & PERSIS GAMBAR 2)
    ========================================== */
 .a4-page {
   width: 210mm;
   height: 297mm;
   background: var(--white);
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  padding: 8mm 10mm 6mm 10mm !important;
+  padding: 0 12mm 8mm 12mm !important; /* Padatkan margin atas */
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
 }
 
-/* HEADER & LOGO TERLETAK DI TENGAH */
+/* TOP NAVY BAR (BAR ATAS SEPERTI GAMBAR 2) */
+.a4-page::before {
+  content: "";
+  display: block;
+  width: calc(100% + 24mm);
+  height: 12px;
+  background-color: var(--navy);
+  margin-left: -12mm;
+  margin-right: -12mm;
+  margin-bottom: 10px;
+}
+
+/* HEADER & LOGO PADAT */
 .opr-header { 
   display: flex; 
   align-items: center; 
   justify-content: center;
-  gap: 20px; 
+  gap: 18px; 
   padding-bottom: 2px;
 }
 
 .opr-logo { 
-  width: 75px !important; 
-  height: 75px !important; 
+  width: 70px !important; 
+  height: 70px !important; 
   object-fit: contain; 
 }
 
 .opr-header-text {
   text-align: center;
+  flex: 1;
 }
 
 .opr-header-text h1 { 
-  font-family: 'Cinzel', serif; 
-  font-size: 20pt !important; 
-  color: var(--navy); 
-  line-height: 1.1; 
-  letter-spacing: 0.5px;
+  font-family: 'Cinzel Decorative', 'Cinzel', serif; 
+  font-size: 22pt !important; 
+  font-weight: 700;
+  color: #111; 
+  line-height: 1.0; 
+  letter-spacing: 1px;
+  transform: scaleY(1.15); /* Efek font tinggi/ramping macam Gambar 2 */
+  margin-bottom: 4px;
+}
+
+.opr-divider { 
+  height: 2px; 
+  background: linear-gradient(to right, transparent, var(--gold), transparent); 
+  margin: 6px 0 !important; 
+  position: relative;
 }
 
 .opr-header-text p { 
   font-size: 8.5pt !important; 
   font-weight: 600; 
-  color: #333;
+  color: #222;
+  letter-spacing: 0.5px;
+  margin-top: 3px;
 }
 
-.opr-header-text .tagline { 
-  font-size: 7.5pt; 
-  color: #555; 
+.opr-header-text .sub-tagline {
+  color: #d9534f !important; /* Warna merah tajuk bawah seperti Gambar 2 */
+  font-weight: bold;
 }
 
-.opr-divider { 
-  height: 2px; 
-  background: var(--gold); 
-  margin: 4px 0 8px 0 !important; 
-}
-
+/* TAJUK UTAMA OPR */
 .opr-title-block { 
   text-align: center; 
-  margin-bottom: 8px; 
+  margin-top: 6px;
+  margin-bottom: 10px; 
 }
 
 .opr-main-title { 
-  font-family: 'Cinzel', serif; 
-  font-size: 16pt !important; 
-  color: var(--navy); 
-  letter-spacing: 1.5px; 
+  font-family: 'Cinzel Decorative', 'Cinzel', serif; 
+  font-size: 18pt !important; 
+  color: #111; 
+  letter-spacing: 2px; 
   font-weight: 700;
+  transform: scaleY(1.15);
 }
 
 .opr-strategy { 
-  font-size: 9.5pt !important; 
-  color: #222; 
-  margin-top: 2px;
+  font-size: 9pt !important; 
+  color: var(--navy); 
+  margin-top: 4px;
+  font-weight: 600;
 }
-
 /* KAD UTAMA OPR DENGAN BACKGROUND SEKOLAH */
 .opr-main-panel {
   background-image: linear-gradient(rgba(20, 26, 60, 0.82), rgba(20, 26, 60, 0.82)), url('bg-sekolah.jpg') !important;
