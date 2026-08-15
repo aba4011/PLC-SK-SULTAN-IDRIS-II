@@ -3,301 +3,265 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PLC OPR Generator - SK Sultan Idris II</title>
+  <title>Borang OPR PLC - SK Sultan Idris II</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Montserrat:wght@400;500;600;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-
   <div class="app-container">
-    <!-- LEFT PANEL: INPUT FORM -->
-    <div class="form-panel no-print">
-      <div class="form-header">
-        <h2>Borang OPR PLC</h2>
+    
+    <!-- BAHAGIAN KIRI: BORANG INPUT -->
+    <div class="form-section">
+      <div class="header-title">
+        <h2>BORANG OPR PLC</h2>
         <p>SK SULTAN IDRIS II</p>
       </div>
 
-      <!-- MASTER DATALIST FOR SEARCHABLE DROPDOWNS -->
-      <datalist id="teachersDatalist"></datalist>
-
       <form id="oprForm">
-        <!-- MAKLUMAT UTAMA -->
-        <fieldset>
+        <!-- FIELDSET 1: MAKLUMAT PLC -->
+        <fieldset class="form-group">
           <legend>Maklumat PLC</legend>
-          
-          <div class="form-group">
-            <label for="strategiPlc">Strategi PLC *</label>
-            <select id="strategiPlc" required>
-              <option value="">-- Pilih Strategi PLC --</option>
-              <option value="Discussion Protocols">Discussion Protocols</option>
-              <option value="Book Clubs">Book Clubs</option>
-              <option value="Study Groups">Study Groups</option>
-              <option value="Video Critiques of Teaching Moments">Video Critiques of Teaching Moments</option>
-              <option value="Learning Walks">Learning Walks</option>
-              <option value="Peer Coaching / Instructional Coaches">Peer Coaching / Instructional Coaches</option>
-              <option value="Lesson Study">Lesson Study</option>
-              <option value="Teacher Sharing Sessions">Teacher Sharing Sessions</option>
-              <option value="Data Analysis">Data Analysis</option>
-              <option value="Curriculum Mapping">Curriculum Mapping</option>
-              <option value="Common Assessments">Common Assessments</option>
-              <option value="Critical / Friends Groups">Critical / Friends Groups</option>
-              <option value="Horizontal & Vertical Teams">Horizontal & Vertical Teams</option>
-              <option value="New Teacher Induction / Mentoring">New Teacher Induction / Mentoring</option>
-              <option value="Interdisciplinary Units & Projects">Interdisciplinary Units & Projects</option>
-              <option value="Problem Solving Groups">Problem Solving Groups</option>
-              <option value="Vision Activity">Vision Activity</option>
-              <option value="Guiding Principles">Guiding Principles</option>
-              <option value="Value Activities">Value Activities</option>
-              <option value="Common Rituals and Strategies">Common Rituals and Strategies</option>
-            </select>
-          </div>
 
-          <div class="form-group">
-            <label for="tajukPlc">Tajuk PLC *</label>
-            <input type="text" id="tajukPlc" placeholder="Contoh: Tajuk PLC" required>
-          </div>
+          <label for="strategiPlc">Strategi PLC *</label>
+          <select id="strategiPlc" name="strategiPlc" required>
+            <option value="Curriculum Mapping">Curriculum Mapping</option>
+            <option value="Lesson Study">Lesson Study</option>
+            <option value="Peer Coaching">Peer Coaching</option>
+
+            <option value="Learning Walks">Learning Walks</option>
+            <option value="Teacher Sharing Sessions">Teacher Sharing Sessions</option>
+            <option value="Video Analysis">Video Analysis</option>
+          </select>
+
+          <label for="tajukPlc">Tajuk PLC *</label>
+          <input type="text" id="tajukPlc" name="tajukPlc" required placeholder="Masukkan tajuk PLC">
 
           <div class="form-row">
-            <div class="form-group">
+            <div>
               <label for="tarikhPlc">Tarikh *</label>
-              <input type="date" id="tarikhPlc" required>
+
+              <input type="date" id="tarikhPlc" name="tarikhPlc" required>
             </div>
-            <div class="form-group">
+            <div>
               <label for="tempatPlc">Tempat *</label>
-              <input type="text" id="tempatPlc" placeholder="Bilik Mesyuarat" required>
+
+              <input type="text" id="tempatPlc" name="tempatPlc" required placeholder="Contoh: Makmal Komputer">
             </div>
           </div>
 
           <div class="form-row">
-            <div class="form-group">
+            <div>
               <label for="masaMula">Masa Mula *</label>
-              <input type="time" id="masaMula" required>
+              <input type="time" id="masaMula" name="masaMula" required>
+
             </div>
-            <div class="form-group">
+            <div>
               <label for="masaTamat">Masa Tamat *</label>
-              <input type="time" id="masaTamat" required>
+              <input type="time" id="masaTamat" name="masaTamat" required>
+            </div>
+
+          </div>
+
+          <label for="namaKumpulan">Nama Kumpulan *</label>
+          <input type="text" id="namaKumpulan" name="namaKumpulan" required placeholder="Nama kumpulan">
+
+          <label for="ketuaKumpulan">Ketua Kumpulan *</label>
+          <input type="text" id="ketuaKumpulan" name="ketuaKumpulan" required placeholder="Nama ketua kumpulan">
+
+          <label>Nama Ahli Kumpulan *</label>
+
+          <div id="ahliContainer">
+            <div class="input-with-btn">
+              <input type="text" class="ahli-input" name="ahliKumpulan[]" placeholder="Nama Ahli 1" required>
+
             </div>
           </div>
+          <button type="button" id="btnAddAhli" class="btn-secondary">+ TAMBAH AHLI</button>
 
-          <div class="form-group">
-            <label for="namaKumpulan">Nama Kumpulan *</label>
-            <input type="text" id="namaKumpulan" placeholder="Contoh: Panitia Sains" required>
-          </div>
+          <label for="disediakanOleh">Disediakan Oleh *</label>
+          <input type="text" id="disediakanOleh" name="disediakanOleh" required placeholder="Nama penyedia laporan">
 
-          <!-- KETUA KUMPULAN -->
-          <div class="form-group">
-            <label for="ketuaKumpulan">Nama Ketua Kumpulan *</label>
-            <input type="text" id="ketuaKumpulan" list="teachersDatalist" class="teacher-input" placeholder="Memuatkan senarai guru..." disabled required autocomplete="off">
-            <small class="error-msg" id="ketuaError"></small>
-          </div>
-
-          <!-- AHLI KUMPULAN -->
-          <div class="form-group">
-            <label>Nama Ahli Kumpulan *</label>
-            <div id="ahliContainer"></div>
-            <button type="button" id="btnAddAhli" class="btn-secondary" disabled>+ TAMBAH AHLI</button>
-          </div>
-
-          <!-- DISEDIAKAN OLEH -->
-          <div class="form-group">
-            <label for="disediakanOleh">Disediakan Oleh *</label>
-            <input type="text" id="disediakanOleh" list="teachersDatalist" class="teacher-input" placeholder="Memuatkan senarai guru..." disabled required autocomplete="off">
-          </div>
         </fieldset>
 
-        <!-- KANDUNGAN LAPORAN -->
-        <fieldset>
+        <!-- FIELDSET 2: MUAT NAIK GAMBAR -->
+
+        <fieldset class="form-group">
+          <legend>Muat Naik Gambar (Maksimum 4)</legend>
+          
+          <label for="imgInput1">Gambar 1</label>
+
+          <input type="file" id="imgInput1" accept="image/*">
+
+          <label for="imgInput2">Gambar 2</label>
+          <input type="file" id="imgInput2" accept="image/*">
+
+          <label for="imgInput3">Gambar 3</label>
+
+          <input type="file" id="imgInput3" accept="image/*">
+
+          <label for="imgInput4">Gambar 4</label>
+
+          <input type="file" id="imgInput4" accept="image/*">
+        </fieldset>
+
+        <!-- FIELDSET 3: KANDUNGAN LAPORAN -->
+        <fieldset class="form-group">
           <legend>Kandungan Laporan</legend>
-          <div class="form-group">
-            <label for="isuMasalah">ISU / MASALAH *</label>
-            <textarea id="isuMasalah" rows="3" required></textarea>
-          </div>
-          <div class="form-group">
-            <label for="pelaksanaanAktiviti">PELAKSANAAN AKTIVITI *</label>
-            <textarea id="pelaksanaanAktiviti" rows="3" required></textarea>
-          </div>
-          <div class="form-group">
-            <label for="objektifProgram">OBJEKTIF PROGRAM *</label>
-            <textarea id="objektifProgram" rows="3" required></textarea>
-          </div>
-          <div class="form-group">
-            <label for="tindakanSusulan">TINDAKAN SUSULAN *</label>
-            <textarea id="tindakanSusulan" rows="3" required></textarea>
-          </div>
-          <div class="form-group">
-            <label for="impakProgram">IMPAK PROGRAM *</label>
-            <textarea id="impakProgram" rows="3" required></textarea>
-          </div>
+
+          <label for="isuMasalah">ISU / MASALAH *</label>
+          <textarea id="isuMasalah" name="isuMasalah" rows="3" required placeholder="Masukkan isu / masalah"></textarea>
+
+          <label for="objektifProgram">OBJEKTIF PROGRAM *</label>
+
+          <textarea id="objektifProgram" name="objektifProgram" rows="3" required placeholder="Masukkan objektif program"></textarea>
+
+          <label for="pelaksanaanAktiviti">PELAKSANAAN AKTIVITI *</label>
+          <textarea id="pelaksanaanAktiviti" name="pelaksanaanAktiviti" rows="3" required placeholder="Masukkan pelaksanaan aktiviti"></textarea>
+
+          <label for="tindakanSusulan">TINDAKAN SUSULAN *</label>
+          <textarea id="tindakanSusulan" name="tindakanSusulan" rows="3" required placeholder="Masukkan tindakan susulan"></textarea>
+
+          <label for="impakProgram">IMPAK PROGRAM *</label>
+
+          <textarea id="impakProgram" name="impakProgram" rows="3" required placeholder="Masukkan impak program"></textarea>
         </fieldset>
 
-        <!-- UPLOAD GAMBAR -->
-        <fieldset>
-          <legend>Gambar Aktiviti (0 - 4 Gambar)</legend>
-          <div class="photo-upload-grid">
-            <div class="upload-box" id="uploadBox1">
-              <label>Gambar 1</label>
-              <input type="file" id="imgInput1" accept="image/*" class="img-input" data-slot="1">
-              <div class="img-controls hidden" id="controls1">
-                <button type="button" class="btn-xs btn-crop" onclick="toggleFit(1)">Fit/Cover</button>
-                <button type="button" class="btn-xs btn-remove" onclick="removeImage(1)">Hapus</button>
-              </div>
-            </div>
-            <div class="upload-box" id="uploadBox2">
-              <label>Gambar 2</label>
-              <input type="file" id="imgInput2" accept="image/*" class="img-input" data-slot="2">
-              <div class="img-controls hidden" id="controls2">
-                <button type="button" class="btn-xs btn-crop" onclick="toggleFit(2)">Fit/Cover</button>
-                <button type="button" class="btn-xs btn-remove" onclick="removeImage(2)">Hapus</button>
-              </div>
-            </div>
-            <div class="upload-box" id="uploadBox3">
-              <label>Gambar 3</label>
-              <input type="file" id="imgInput3" accept="image/*" class="img-input" data-slot="3">
-              <div class="img-controls hidden" id="controls3">
-                <button type="button" class="btn-xs btn-crop" onclick="toggleFit(3)">Fit/Cover</button>
-                <button type="button" class="btn-xs btn-remove" onclick="removeImage(3)">Hapus</button>
-              </div>
-            </div>
-            <div class="upload-box" id="uploadBox4">
-              <label>Gambar 4</label>
-              <input type="file" id="imgInput4" accept="image/*" class="img-input" data-slot="4">
-              <div class="img-controls hidden" id="controls4">
-                <button type="button" class="btn-xs btn-crop" onclick="toggleFit(4)">Fit/Cover</button>
-                <button type="button" class="btn-xs btn-remove" onclick="removeImage(4)">Hapus</button>
-              </div>
-            </div>
-          </div>
-        </fieldset>
-
-        <!-- BUTTON ACTIONS -->
-        <div class="form-actions">
-          <button type="submit" id="btnSubmit" class="btn-primary">GENERATE OPR & SIMPAN</button>
-          <button type="button" id="btnReset" class="btn-danger">RESET</button>
-        </div>
+        <button type="submit" class="btn-primary" id="btnSubmit">GENERATE OPR & SIMPAN</button>
       </form>
+
     </div>
 
-    <!-- RIGHT PANEL: LIVE PREVIEW CANVAS (SEPADAN IMEJ 2) -->
-    <div class="preview-panel">
-      <div class="preview-toolbar no-print">
-        <button type="button" onclick="window.print()" class="btn-action">🖨️ PRINT OPR</button>
-        <a id="btnDrive" href="https://drive.google.com/drive/folders/1aDoQrGklEhmFUdCfj1sz09vCdFZVM0Ni" target="_blank" class="btn-action">📁 GOOGLE DRIVE</a>
+    <!-- BAHAGIAN KANAN: PREVIEW CANVAS OPR -->
+    <div class="preview-section">
+      <div class="top-action-bar">
+        <button id="btnPrint" class="btn-action">🖨️ PRINT OPR</button>
+
+        <button id="btnDrive" class="btn-action">📁 GOOGLE DRIVE</button>
+
       </div>
 
-      <!-- CANVAS CONTAINER FIXED A4 (EXACT IMAGE 2 REPLICATION) -->
-      <div class="a4-page" id="oprPreviewCanvas">
-        <!-- BAR BIRU GELAP PALING ATAS -->
-        <div class="top-navy-bar"></div>
+      <div class="opr-paper" id="oprPaper">
+        
+        <!-- HEADER KERTAS OPR -->
+        <div class="paper-header">
 
-        <!-- HEADER PUSAT -->
-        <div class="opr-header">
-          <img src="logo.png" alt="Lencana SK Sultan Idris II" class="opr-logo">
-          
-          <div class="opr-header-center">
-            <h1 class="school-title">SK SULTAN IDRIS II</h1>
-            <div class="ornament-divider"></div>
-            <p class="school-address">JALAN TUN ABDUL RAZAK, 33000 KUALA KANGSAR, PERAK.</p>
-            <p class="school-tagline">(SEKOLAH BERPRESTASI TINGGI)</p>
-            
-            <h2 class="opr-main-title">ONE PAGE REPORT (PLC)</h2>
-            <p class="opr-strategi-label">Strategi PLC: <span id="pvStrategiText"></span></p>
+          <img src="logo.png" alt="Logo Sekolah" class="school-logo" onerror="this.style.display='none'">
+          <div class="school-details">
+
+            <h1>SK SULTAN IDRIS II</h1>
+            <p class="address">JALAN TUN ABDUL RAZAK, 33000 KUALA KANGSAR, PERAK.</p>
+
+            <p class="tagline">(SEKOLAH BERPRESTASI TINGGI)</p>
+            <h2 class="opr-main-title">ONE PAGE REPORT</h2>
+
+            <p class="prepared-by-header">Disediakan oleh: Nur Syazwani binti Nasrul-Isham | Penyelaras DELIMa SK Sultan Idris II</p>
           </div>
         </div>
 
-        <!-- KAD UTAMA OPR (SEPERTI IMEJ 2) -->
-        <div class="opr-main-panel">
-          <img src="bg-sekolah.jpg" class="bg-card-img" alt="Latar Belakang Sekolah">
-          <div class="bg-card-overlay"></div>
+        <!-- PETAK UTAMA: MAKLUMAT & GAMBAR -->
+        <div class="main-info-box">
 
-          <div class="panel-info">
-            <h3 id="pvTajuk">Tajuk PLC</h3>
-            <div class="gold-line"></div>
-            <p class="info-line"><strong>Tarikh/Masa:</strong> <span id="pvTarikhMasa"></span></p>
-            <p class="info-line"><strong>Tempat:</strong> <span id="pvTempat"></span></p>
-            <p class="info-line"><strong>Masa:</strong> <span id="pvMasa"></span></p>
-            <p class="info-line"><strong>Nama Kumpulan:</strong> <span id="pvKumpulan"></span></p>
-            <p class="info-line"><strong>Nama Ketua Kumpulan:</strong> <span id="pvKetua"></span></p>
-            
-            <div class="pv-ahli-wrapper">
-              <p class="info-line"><strong>Nama Ahli Kumpulan:</strong></p>
-              <ol id="pvAhliList" class="pv-ahli-list">
+          <!-- KIRI: TEXT MAKLUMAT -->
+          <div class="info-left-panel">
+            <h3 class="plc-title-display" id="pvTajuk">TAJUK PLC AKAN DIPAPARKAN DI SINI</h3>
+            <div class="plc-details-list">
+              <p><strong>Tarikh/Masa:</strong> <span id="pvTarikhMasa">-</span></p>
+
+              <p><strong>Tempat:</strong> <span id="pvTempat">-</span></p>
+              <p><strong>Nama Kumpulan:</strong> <span id="pvKumpulan">-</span></p>
+              <p><strong>Ketua Kumpulan:</strong> <span id="pvKetua">-</span></p>
+
+              <p><strong>Nama Ahli Kumpulan:</strong></p>
+              <ul id="pvAhliList" class="ahli-preview-list">
+
                 <li>1. </li>
                 <li>2. </li>
+
                 <li>3. </li>
                 <li>4. </li>
-                <li>5. </li>
-                <li>6. </li>
-                <li>7. </li>
-                <li>8. </li>
-              </ol>
+              </ul>
             </div>
           </div>
 
-          <div class="panel-photos">
-            <div class="photo-slot" id="slot1"><span class="ph-label"></span></div>
-            <div class="photo-slot" id="slot2"><span class="ph-label"></span></div>
-            <div class="photo-slot" id="slot3"><span class="ph-label"></span></div>
-            <div class="photo-slot" id="slot4"><span class="ph-label"></span></div>
+          <!-- KANAN: GRID 4 GAMBAR -->
+          <div class="info-right-panel">
+            <div class="image-grid">
+
+              <div class="img-slot" id="slot1">Gambar 1</div>
+
+              <div class="img-slot" id="slot2">Gambar 2</div>
+              <div class="img-slot" id="slot3">Gambar 3</div>
+
+              <div class="img-slot" id="slot4">Gambar 4</div>
+            </div>
+
           </div>
         </div>
 
-        <!-- KOTAK LAPORAN (SUSUNAN GRID & BADGES SEPERTI IMEJ 2) -->
-        <div class="opr-boxes-grid">
-          <!-- BARIS 1 -->
-          <div class="opr-box box-isu">
-            <div class="badge-title">ISU/MASALAH</div>
-            <div id="pvIsu" class="box-content">Masukkan Isu/masalah.</div>
-          </div>
-          <div class="opr-box box-pelaksanaan">
-            <div class="badge-title">PELAKSANAAN AKTIVITI</div>
-            <div id="pvPelaksanaan" class="box-content">Masukkan pelaksanaan aktiviti.</div>
+        <!-- PETAK KANDUNGAN (GRID 2 KOLUM) -->
+        <div class="content-grid-container">
+          
+          <!-- KOLUM KIRI -->
+          <div class="content-col">
+
+            <div class="content-box">
+              <div class="content-box-title">ISU/MASALAH</div>
+              <div class="content-box-body" id="pvIsu">Masukkan Isu/masalah.</div>
+            </div>
+
+            <div class="content-box">
+              <div class="content-box-title">OBJEKTIF PROGRAM</div>
+
+              <div class="content-box-body" id="pvObjektif">Masukkan objektif program.</div>
+
+            </div>
+
+            <div class="content-box">
+              <div class="content-box-title">IMPAK PROGRAM</div>
+
+              <div class="content-box-body" id="pvImpak">Masukkan Impak.</div>
+            </div>
           </div>
 
-          <!-- BARIS 2 -->
-          <div class="opr-box box-objektif">
-            <div class="badge-title">OBJEKTIF PROGRAM</div>
-            <div id="pvObjektif" class="box-content">Masukkan objektif program.</div>
-          </div>
-          <div class="opr-box box-tindakan">
-            <div class="badge-title badge-tindakan">Tindakan Susulan</div>
-            <div id="pvTindakan" class="box-content">Masukkan tindakan susulan.</div>
+          <!-- KOLUM KANAN -->
+          <div class="content-col">
+            <div class="content-box">
+
+              <div class="content-box-title">PELAKSANAAN AKTIVITI</div>
+              <div class="content-box-body" id="pvPelaksanaan">Masukkan pelaksanaan aktiviti.</div>
+
+            </div>
+
+            <div class="content-box">
+              <div class="content-box-title">TINDAKAN SUSULAN</div>
+
+              <div class="content-box-body" id="pvTindakan">Masukkan tindakan susulan.</div>
+            </div>
           </div>
 
-          <!-- BARIS 3 -->
-          <div class="opr-box box-impak">
-            <div class="badge-title">IMPAK PROGRAM</div>
-            <div id="pvImpak" class="box-content">Masukkan Impak</div>
+        </div>
+
+        <!-- FOOTER KERTAS OPR -->
+        <div class="paper-footer">
+          <div class="signature-line">
+            DISEDIAKAN OLEH: <span id="pvDisediakan"></span>
           </div>
-          <div class="opr-box box-empty">
-            <!-- Ruang kosong di sebelah kanan sepadan Imej 2 -->
+
+          <div class="motto-bar">
+            IN TIME, IN STYLE, INSPIRED
           </div>
         </div>
 
-        <!-- DISEDIAKAN OLEH (CENTERED) -->
-        <div class="opr-signature">
-          <p>Disediakan oleh:</p>
-          <p class="sig-name" id="pvDisediakan"></p>
-        </div>
-
-        <!-- FOOTER PALING ATAS DASAR KERTAS -->
-        <div class="opr-footer">
-          IN TIME, IN STYLE, INSPIRED
-        </div>
       </div>
     </div>
+
   </div>
 
-  <!-- LOADING OVERLAY -->
-  <div id="loadingOverlay" class="loading-overlay hidden">
-    <div class="spinner"></div>
-    <p id="loadingText">MENJANA OPR...</p>
-  </div>
-
-<!-- SCRIPT LIBRARY -->
+  <!-- SKRIP UNTUK JANA PDF & LOGIK SCRIPT -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
   <script src="config.js"></script>
   <script src="script.js"></script>
 </body>
+
 </html>
