@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PLC OPR Generator - SK Sultan Idris II</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@400;600;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- LEFT PANEL: INPUT FORM -->
+    <div class="form-panel no-print">
+      <div class="form-header">
+        <h2>Borang OPR PLC</h2>
+        <p>SK SULTAN IDRIS II</p>
+      </div>
+
+      <!-- MASTER DATALIST FOR SEARCHABLE DROPDOWNS -->
+      <datalist id="teachersDatalist"></datalist>
+
+      <form id="oprForm">
+        <!-- MAKLUMAT UTAMA -->
+        <fieldset>
+          <legend>Maklumat PLC</legend>
+          
+          <div class="form-group">
+            <label for="strategiPlc">Strategi PLC *</label>
+            <select id="strategiPlc" required>
+              <option value="">-- Pilih Strategi PLC --</option>
+              <option value="Discussion Protocols">Discussion Protocols</option>
+              <option value="Book Clubs">Book Clubs</option>
+              <option value="Study Groups">Study Groups</option>
+              <option value="Video Critiques of Teaching Moments">Video Critiques of Teaching Moments</option>
+              <option value="Learning Walks">Learning Walks</option>
+              <option value="Peer Coaching / Instructional Coaches">Peer Coaching / Instructional Coaches</option>
+              <option value="Lesson Study">Lesson Study</option>
+              <option value="Teacher Sharing Sessions">Teacher Sharing Sessions</option>
+              <option value="Data Analysis">Data Analysis</option>
+              <option value="Curriculum Mapping">Curriculum Mapping</option>
+              <option value="Common Assessments">Common Assessments</option>
+              <option value="Critical / Friends Groups">Critical / Friends Groups</option>
+              <option value="Horizontal & Vertical Teams">Horizontal & Vertical Teams</option>
+              <option value="New Teacher Induction / Mentoring">New Teacher Induction / Mentoring</option>
+              <option value="Interdisciplinary Units & Projects">Interdisciplinary Units & Projects</option>
+              <option value="Problem Solving Groups">Problem Solving Groups</option>
+              <option value="Vision Activity">Vision Activity</option>
+              <option value="Guiding Principles">Guiding Principles</option>
+              <option value="Value Activities">Value Activities</option>
+              <option value="Common Rituals and Strategies">Common Rituals and Strategies</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="tajukPlc">Tajuk PLC *</label>
+            <input type="text" id="tajukPlc" placeholder="Contoh: Penggunaan AI Dalam PdP" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="tarikhPlc">Tarikh *</label>
+              <input type="date" id="tarikhPlc" required>
+            </div>
+            <div class="form-group">
+              <label for="tempatPlc">Tempat *</label>
+              <input type="text" id="tempatPlc" placeholder="Bilik Mesyuarat" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="masaMula">Masa Mula *</label>
+              <input type="time" id="masaMula" required>
+            </div>
+            <div class="form-group">
+              <label for="masaTamat">Masa Tamat *</label>
+              <input type="time" id="masaTamat" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="namaKumpulan">Nama Kumpulan *</label>
+            <input type="text" id="namaKumpulan" placeholder="Contoh: Panitia Sains" required>
+          </div>
+
+          <!-- KETUA KUMPULAN - SEARCHABLE -->
+          <div class="form-group">
+            <label for="ketuaKumpulan">Ketua Kumpulan *</label>
+            <input type="text" id="ketuaKumpulan" list="teachersDatalist" class="teacher-input" placeholder="Memuatkan senarai guru..." disabled required autocomplete="off">
+            <small class="error-msg" id="ketuaError"></small>
+          </div>
+
+          <!-- AHLI KUMPULAN - SEARCHABLE -->
+          <div class="form-group">
+            <label>Nama Ahli Kumpulan *</label>
+            <div id="ahliContainer"></div>
+            <button type="button" id="btnAddAhli" class="btn-secondary" disabled>+ TAMBAH AHLI</button>
+          </div>
+
+          <!-- DISEDIAKAN OLEH - SEARCHABLE -->
+          <div class="form-group">
+            <label for="disediakanOleh">Disediakan Oleh *</label>
+            <input type="text" id="disediakanOleh" list="teachersDatalist" class="teacher-input" placeholder="Memuatkan senarai guru..." disabled required autocomplete="off">
+          </div>
+        </fieldset>
+
+        <!-- KANDUNGAN LAPORAN -->
+        <fieldset>
+          <legend>Kandungan Laporan</legend>
+          <div class="form-group">
+            <label for="isuMasalah">ISU / MASALAH *</label>
+            <textarea id="isuMasalah" rows="3" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="objektifProgram">OBJEKTIF PROGRAM *</label>
+            <textarea id="objektifProgram" rows="3" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="pelaksanaanAktiviti">PELAKSANAAN AKTIVITI *</label>
+            <textarea id="pelaksanaanAktiviti" rows="3" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="impakProgram">IMPAK PROGRAM *</label>
+            <textarea id="impakProgram" rows="3" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="tindakanSusulan">TINDAKAN SUSULAN *</label>
+            <textarea id="tindakanSusulan" rows="3" required></textarea>
+          </div>
+        </fieldset>
+
+        <!-- UPLOAD 4 GAMBAR -->
+        <fieldset>
+          <legend>Gambar Aktiviti (0 - 4 Gambar)</legend>
+          <div class="photo-upload-grid">
+            <div class="upload-box" id="uploadBox1">
+              <label>Gambar 1</label>
+              <input type="file" id="imgInput1" accept="image/*" class="img-input" data-slot="1">
+              <div class="img-controls hidden" id="controls1">
+                <button type="button" class="btn-xs btn-crop" onclick="toggleFit(1)">Fit/Cover</button>
+                <button type="button" class="btn-xs btn-remove" onclick="removeImage(1)">Hapus</button>
+              </div>
+            </div>
+            <div class="upload-box" id="uploadBox2">
+              <label>Gambar 2</label>
+              <input type="file" id="imgInput2" accept="image/*" class="img-input" data-slot="2">
+              <div class="img-controls hidden" id="controls2">
+                <button type="button" class="btn-xs btn-crop" onclick="toggleFit(2)">Fit/Cover</button>
+                <button type="button" class="btn-xs btn-remove" onclick="removeImage(2)">Hapus</button>
+              </div>
+            </div>
+            <div class="upload-box" id="uploadBox3">
+              <label>Gambar 3</label>
+              <input type="file" id="imgInput3" accept="image/*" class="img-input" data-slot="3">
+              <div class="img-controls hidden" id="controls3">
+                <button type="button" class="btn-xs btn-crop" onclick="toggleFit(3)">Fit/Cover</button>
+                <button type="button" class="btn-xs btn-remove" onclick="removeImage(3)">Hapus</button>
+              </div>
+            </div>
+            <div class="upload-box" id="uploadBox4">
+              <label>Gambar 4</label>
+              <input type="file" id="imgInput4" accept="image/*" class="img-input" data-slot="4">
+              <div class="img-controls hidden" id="controls4">
+                <button type="button" class="btn-xs btn-crop" onclick="toggleFit(4)">Fit/Cover</button>
+                <button type="button" class="btn-xs btn-remove" onclick="removeImage(4)">Hapus</button>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- BUTTON ACTIONS -->
+        <div class="form-actions">
+          <button type="submit" id="btnSubmit" class="btn-primary">GENERATE OPR & SIMPAN</button>
+          <button type="button" id="btnReset" class="btn-danger">RESET</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- RIGHT PANEL: LIVE PREVIEW CANVAS (FIXED A4) -->
+    <div class="preview-panel">
+      <div class="preview-toolbar no-print">
+        <button type="button" onclick="window.print()" class="btn-action">🖨️ PRINT OPR</button>
+        <a id="btnDrive" href="https://drive.google.com/drive/folders/1aDoQrGklEhmFUdCfj1sz09vCdFZVM0Ni" target="_blank" class="btn-action">📁 GOOGLE DRIVE</a>
+      </div>
+
+      <!-- CANVAS CONTAINER FIXED A4 -->
+      <div class="a4-page" id="oprPreviewCanvas">
+        <div class="opr-header">
+          <img src="assets/logo.png" alt="Lencana Sekolah" class="opr-logo" onerror="this.src='https://ibb.co/LdWxSJSM'">
+          <div class="opr-header-text">
+            <h1>SK SULTAN IDRIS II</h1>
+            <p>JALAN TUN ABDUL RAZAK, 33000 KUALA KANGSAR, PERAK.</p>
+            <p class="tagline">(SEKOLAH BERPRESTASI TINGGI)</p>
+          </div>
+        </div>
+
+        <div class="opr-divider"></div>
+
+        <div class="opr-title-block">
+          <h2 class="opr-main-title">ONE PAGE REPORT (PLC)</h2>
+          <p class="opr-strategy"><strong>Strategi PLC:</strong> <span id="pvStrategi">Discussion Protocols</span></p>
+        </div>
+
+        <div class="opr-main-panel">
+          <div class="panel-info">
+            <h3 id="pvTajuk">TAJUK PLC AKAN DIPAPARKAN DI SINI</h3>
+            <p><strong>Tarikh/Masa:</strong> <span id="pvTarikhMasa">-</span></p>
+            <p><strong>Tempat:</strong> <span id="pvTempat">-</span></p>
+            <p><strong>Nama Kumpulan:</strong> <span id="pvKumpulan">-</span></p>
+            <p><strong>Ketua Kumpulan:</strong> <span id="pvKetua">-</span></p>
+            <div class="pv-ahli-wrapper">
+              <p><strong>Nama Ahli Kumpulan:</strong></p>
+              <ol id="pvAhliList" class="pv-ahli-list"></ol>
+            </div>
+          </div>
+
+          <div class="panel-photos">
+            <div class="photo-slot" id="slot1"><span class="ph-label">Gambar 1</span></div>
+            <div class="photo-slot" id="slot2"><span class="ph-label">Gambar 2</span></div>
+            <div class="photo-slot" id="slot3"><span class="ph-label">Gambar 3</span></div>
+            <div class="photo-slot" id="slot4"><span class="ph-label">Gambar 4</span></div>
+          </div>
+        </div>
+
+        <div class="opr-boxes-grid">
+          <div class="opr-box box-isu">
+            <h4>ISU/MASALAH</h4>
+            <div id="pvIsu" class="box-content"></div>
+          </div>
+          <div class="opr-box box-pelaksanaan">
+            <h4>PELAKSANAAN AKTIVITI</h4>
+            <div id="pvPelaksanaan" class="box-content"></div>
+          </div>
+          <div class="opr-box box-objektif">
+            <h4>OBJEKTIF PROGRAM</h4>
+            <div id="pvObjektif" class="box-content"></div>
+          </div>
+          <div class="opr-box box-tindakan">
+            <h4>TINDAKAN SUSULAN</h4>
+            <div id="pvTindakan" class="box-content"></div>
+          </div>
+          <div class="opr-box box-impak full-width">
+            <h4>IMPAK PROGRAM</h4>
+            <div id="pvImpak" class="box-content"></div>
+          </div>
+        </div>
+
+        <div class="opr-signature">
+          <p>Disediakan oleh:</p>
+          <p class="sig-name" id="pvDisediakan">............................................................</p>
+        </div>
+
+        <div class="opr-footer">
+          IN TIME, IN STYLE, INSPIRED
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING OVERLAY -->
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="spinner"></div>
+    <p id="loadingText">MENJANA OPR...</p>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
