@@ -86,21 +86,21 @@
             <input type="text" id="namaKumpulan" placeholder="Contoh: Panitia Sains" required>
           </div>
 
-          <!-- KETUA KUMPULAN - SEARCHABLE -->
+          <!-- KETUA KUMPULAN -->
           <div class="form-group">
             <label for="ketuaKumpulan">Ketua Kumpulan *</label>
             <input type="text" id="ketuaKumpulan" list="teachersDatalist" class="teacher-input" placeholder="Memuatkan senarai guru..." disabled required autocomplete="off">
             <small class="error-msg" id="ketuaError"></small>
           </div>
 
-          <!-- AHLI KUMPULAN - SEARCHABLE -->
+          <!-- AHLI KUMPULAN -->
           <div class="form-group">
             <label>Nama Ahli Kumpulan *</label>
             <div id="ahliContainer"></div>
             <button type="button" id="btnAddAhli" class="btn-secondary" disabled>+ TAMBAH AHLI</button>
           </div>
 
-          <!-- DISEDIAKAN OLEH - SEARCHABLE -->
+          <!-- DISEDIAKAN OLEH -->
           <div class="form-group">
             <label for="disediakanOleh">Disediakan Oleh *</label>
             <input type="text" id="disediakanOleh" list="teachersDatalist" class="teacher-input" placeholder="Memuatkan senarai guru..." disabled required autocomplete="off">
@@ -188,23 +188,25 @@
 
       <!-- CANVAS CONTAINER FIXED A4 -->
       <div class="a4-page" id="oprPreviewCanvas">
+        <!-- BAR BIRU GELAP PALING ATAS (PERFECT MATCH GAMBAR 2) -->
+        <div class="top-navy-bar"></div>
+
+        <!-- HEADER PUSAT (CENTERED HEADER STRUKTUR SEPERTI GAMBAR 2) -->
         <div class="opr-header">
           <img src="logo.png" alt="Lencana SK Sultan Idris II" class="opr-logo">
-          <div class="opr-header-text">
-            <h1>SK SULTAN IDRIS II</h1>
-            <p>JALAN TUN ABDUL RAZAK, 33000 KUALA KANGSAR, PERAK.</p>
-            <p class="tagline">(SEKOLAH BERPRESTASI TINGGI)</p>
+          
+          <div class="opr-header-center">
+            <h1 class="school-title">SK SULTAN IDRIS II</h1>
+            <div class="ornament-divider"></div>
+            <p class="school-address">JALAN TUN ABDUL RAZAK, 33000 KUALA KANGSAR, PERAK.</p>
+            <p class="school-tagline">(SEKOLAH BERPRESTASI TINGGI)</p>
+            
+            <h2 class="opr-main-title">ONE PAGE REPORT</h2>
+            <p class="opr-by">Disediakan oleh: <span id="pvDisediakanHeader">Nur Syazwani binti Nasrul-Isham</span> | <span id="pvStrategiHeader">Penyelaras DELIMa SK Sultan Idris II</span></p>
           </div>
         </div>
 
-        <div class="opr-divider"></div>
-
-        <div class="opr-title-block">
-          <h2 class="opr-main-title">ONE PAGE REPORT (PLC)</h2>
-          <p class="opr-strategy"><strong>Strategi PLC:</strong> <span id="pvStrategi">Discussion Protocols</span></p>
-        </div>
-
-        <!-- MAIN PANEL WITH HTML BACKGROUND IMAGE OVERLAY -->
+        <!-- KAD UTAMA OPR -->
         <div class="opr-main-panel" style="position: relative; overflow: hidden;">
           <img src="bg-sekolah.jpg" class="bg-card-img" style="position: absolute; top:0; left:0; width:100%; height:100%; object-fit: cover; z-index: 1;" alt="Latar Belakang Sekolah">
           <div class="bg-card-overlay" style="position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(20, 26, 60, 0.85); z-index: 2;"></div>
@@ -229,6 +231,7 @@
           </div>
         </div>
 
+        <!-- KOTAK LAPORAN -->
         <div class="opr-boxes-grid">
           <div class="opr-box box-isu">
             <h4>ISU/MASALAH</h4>
