@@ -158,8 +158,6 @@ textarea { resize: vertical; }
 .preview-toolbar { margin-bottom: 15px; display: flex; gap: 10px; }
 
 /* FIXED A4 CANVAS SETUP */
-@page { size: A4 portrait; margin: 0; }
-
 .a4-page {
   width: 210mm;
   height: 297mm;
@@ -171,6 +169,7 @@ textarea { resize: vertical; }
   justify-content: space-between;
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .opr-header { display: flex; align-items: center; gap: 15px; }
@@ -184,19 +183,23 @@ textarea { resize: vertical; }
 .opr-main-title { font-family: 'Cinzel', serif; font-size: 15pt; color: var(--navy); letter-spacing: 1px; }
 .opr-strategy { font-size: 9pt; color: #333; }
 
+/* KAD UTAMA OPR DENGAN BACKGROUND SEKOLAH */
 .opr-main-panel {
-  background: linear-gradient(rgba(22, 10, 85, 0.88), rgba(22, 10, 85, 0.88)), url('assets/school-background.jpg');
-  background-size: cover;
-  background-position: center;
+  background-image: linear-gradient(rgba(20, 26, 60, 0.82), rgba(20, 26, 60, 0.82)), url('bg-sekolah.jpg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
   border-radius: 6px;
   padding: 10px;
-  color: var(--white);
+  color: var(--white) !important;
   display: flex;
   gap: 10px;
   min-height: 85mm;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
 }
 
-.panel-info { flex: 1.1; font-size: 8.5pt; }
+.panel-info { flex: 1.1; font-size: 8.5pt; color: var(--white); }
 .panel-info h3 { color: var(--gold); font-size: 11pt; margin-bottom: 6px; border-bottom: 1px solid var(--gold); padding-bottom: 4px; }
 .pv-ahli-wrapper { margin-top: 4px; }
 .pv-ahli-list { padding-left: 15px; font-size: 8pt; max-height: 38mm; overflow: hidden; }
@@ -220,12 +223,14 @@ textarea { resize: vertical; }
 .opr-box h4 {
   font-family: 'Roboto Condensed', sans-serif;
   font-size: 8.5pt;
-  background: var(--navy);
-  color: var(--white);
+  background: var(--navy) !important;
+  color: var(--white) !important;
   padding: 2px 6px;
   margin: -6px -6px 4px -6px;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
 }
 
 .box-content { font-size: 8pt; line-height: 1.25; white-space: pre-wrap; word-break: break-word; }
@@ -234,16 +239,19 @@ textarea { resize: vertical; }
 .sig-name { font-weight: bold; margin-top: 15px; text-decoration: underline; }
 
 .opr-footer {
-  background: var(--navy);
-  color: var(--white);
+  background: var(--navy) !important;
+  color: var(--white) !important;
   text-align: center;
   font-size: 8pt;
   font-weight: bold;
   letter-spacing: 1px;
   padding: 4px 0;
   margin: 0 -12mm -10mm -12mm;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
 }
 
+/* OVERLAY MEMUATKAN */
 .loading-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(0,0,0,0.7);
@@ -260,46 +268,51 @@ textarea { resize: vertical; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 .hidden { display: none !important; }
 
+/* ==========================================
+   TETAPAN PRINT KHAS (A4 PRINT CSS)
+   ========================================== */
 @media print {
-  body { background: white; }
+  @page { 
+    size: A4 portrait; 
+    margin: 0; 
+  }
+  
+  body { 
+    background: white !important; 
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 
-/* Tetapan Saiz & Kedudukan Lencana */
-.opr-logo {
-  width: 80px !important;
-  height: auto !important;
-  position: absolute;
-  top: 10px;
-  left: 15px;
-}
-
-/* Tetapan Background Gambar Sekolah */
-.opr-main-panel {
-  background-image: linear-gradient(rgba(20, 26, 60, 0.82), rgba(20, 26, 60, 0.82)), url('bg-sekolah.jpg') !important;
-  background-size: cover !important;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
-}
-
-/* Tetapan Cetakan Print CSS */
-@media print {
   body * {
     visibility: hidden;
   }
-  .no-print {
-    display: none !important;
+
+  .no-print, .form-panel, .preview-toolbar { 
+    display: none !important; 
   }
+
+  .app-container { 
+    display: block !important; 
+    height: auto !important; 
+  }
+
+  .preview-panel { 
+    padding: 0 !important; 
+    background: white !important; 
+    overflow: visible !important;
+  }
+
   #oprPreviewCanvas, #oprPreviewCanvas * {
     visibility: visible;
   }
+
   #oprPreviewCanvas {
     position: absolute;
     left: 0;
     top: 0;
-    width: 100%;
+    width: 210mm !important;
+    height: 297mm !important;
+    box-shadow: none !important;
+    margin: 0 !important;
   }
-}
-  .no-print { display: none !important; }
-  .app-container { display: block; height: auto; }
-  .preview-panel { padding: 0; background: white; }
-  .a4-page { box-shadow: none; page-break-after: always; }
 }
