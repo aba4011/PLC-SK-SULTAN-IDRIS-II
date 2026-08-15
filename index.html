@@ -73,9 +73,9 @@
               </select>
             </div>
           </div>
-          <button type="button" id="btnAddAhli" class="btn-secondary">+ TAMBAH AHLI</button>
+          <button type="button" id="btnAddAhli" class="btn-secondary" style="margin-top: 8px;">+ TAMBAH AHLI</button>
 
-          <label for="disediakanOleh">Disediakan Oleh *</label>
+          <label for="disediakanOleh" style="margin-top: 12px;">Disediakan Oleh *</label>
           <select id="disediakanOleh" name="disediakanOleh" class="teacher-dropdown" required>
             <option value="">-- Pilih Penyedia Laporan --</option>
           </select>
@@ -161,16 +161,7 @@
                 <p><strong>Nama Kumpulan:</strong> <span id="pvKumpulan">-</span></p>
                 <p><strong>Nama Ketua Kumpulan:</strong> <span id="pvKetua">-</span></p>
                 <p><strong>Nama Ahli Kumpulan:</strong></p>
-                <ol id="pvAhliList" class="ahli-numbered-list">
-                  <li>1. </li>
-                  <li>2. </li>
-                  <li>3. </li>
-                  <li>4. </li>
-                  <li>5. </li>
-                  <li>6. </li>
-                  <li>7. </li>
-                  <li>8. </li>
-                </ol>
+                <ol id="pvAhliList" class="ahli-numbered-list"></ol>
               </div>
             </div>
 
@@ -194,7 +185,7 @@
           </div>
         </div>
 
-        <!-- SECTION KANDUNGAN LAPORAN (ASYMMETRICAL LAYOUT) -->
+        <!-- SECTION KANDUNGAN LAPORAN -->
         <div class="report-content-grid">
           <!-- LAJUR KIRI -->
           <div class="report-col col-left">
@@ -222,7 +213,7 @@
             </div>
 
             <div class="gold-box">
-              <div class="gold-pill">Tindakan Susulan</div>
+              <div class="gold-pill">TINDAKAN SUSULAN</div>
               <p id="pvTindakan">Masukkan tindakan susulan</p>
             </div>
           </div>
@@ -243,7 +234,8 @@
 
   </div>
 
+  <!-- LIBRARIES & SCRIPTS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="script.js"></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
