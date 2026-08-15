@@ -274,7 +274,7 @@ function formatDateMY(dateStr) {
   return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
-// 5. Submit Form ke Apps Script
+// 5. Submit Form & Penjanaan PDF ke Google Apps Script (BERJAYA DIBAIKI)
 async function handleFormSubmit(e) {
   e.preventDefault();
 
@@ -292,30 +292,45 @@ async function handleFormSubmit(e) {
     return;
   }
 
-  showLoading("MENJANA OPR & MENYIMPAN...");
+  showLoading("MENJANA FAIL PDF OPR & MENYIMPAN...");
 
-  const ahliArray = Array.from(document.querySelectorAll('.ahli-input')).map(input => input.value.trim()).filter(v => v !== '');
-
-  const payload = {
-    strategi: document.getElementById('strategiPlc').value,
-    tajuk: document.getElementById('tajukPlc').value,
-    tarikh: document.getElementById('tarikhPlc').value,
-    masaMula: document.getElementById('masaMula').value,
-    masaTamat: document.getElementById('masaTamat').value,
-    tempat: document.getElementById('tempatPlc').value,
-    kumpulan: document.getElementById('namaKumpulan').value,
-    ketua: document.getElementById('ketuaKumpulan').value.trim(),
-    ahli: ahliArray,
-    disediakan: document.getElementById('disediakanOleh').value.trim(),
-    isu: document.getElementById('isuMasalah').value,
-    objektif: document.getElementById('objektifProgram').value,
-    pelaksanaan: document.getElementById('pelaksanaanAktiviti').value,
-    impak: document.getElementById('impakProgram').value,
-    tindakan: document.getElementById('tindakanSusulan').value,
-    images: uploadedImages
+  const element = document.getElementById('oprPreviewCanvas');
+  const opt = {
+    margin:       0,
+    filename:     'OPR_PLC.pdf',
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2, useCORS: true, allowTaint: true },
+    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
   };
 
   try {
+    // 1. Tukar Paparan HTML Canvas kepada PDF String (Base64)
+    const pdfBase64 = await html2pdf().set(opt).from(element).outputPdf('datauristring');
+
+    const ahliArray = Array.from(document.querySelectorAll('.ahli-input')).map(input => input.value.trim()).filter(v => v !== '');
+
+    // 2. Sediakan data payload beserta pdfBase64
+    const payload = {
+      strategi: document.getElementById('strategiPlc').value,
+      tajuk: document.getElementById('tajukPlc').value,
+      tarikh: document.getElementById('tarikhPlc').value,
+      masaMula: document.getElementById('masaMula').value,
+      masaTamat: document.getElementById('masaTamat').value,
+      tempat: document.getElementById('tempatPlc').value,
+      kumpulan: document.getElementById('namaKumpulan').value,
+      ketua: document.getElementById('ketuaKumpulan').value.trim(),
+      ahli: ahliArray,
+      disediakan: document.getElementById('disediakanOleh').value.trim(),
+      isu: document.getElementById('isuMasalah').value,
+      objektif: document.getElementById('objektifProgram').value,
+      pelaksanaan: document.getElementById('pelaksanaanAktiviti').value,
+      impak: document.getElementById('impakProgram').value,
+      tindakan: document.getElementById('tindakanSusulan').value,
+      images: uploadedImages,
+      pdfBase64: pdfBase64 // PERUBAHAN UTAMA: Hantar fail PDF ke Google Apps Script
+    };
+
+    // 3. Hantar data ke Google Apps Script
     const response = await fetch(CONFIG.APPS_SCRIPT_URL, {
       method: 'POST',
       body: JSON.stringify(payload)
@@ -325,14 +340,14 @@ async function handleFormSubmit(e) {
     hideLoading();
 
     if(result.status === 'success') {
-      alert(`Berjaya! OPR ID: ${result.oprId}`);
+      alert(`Berjaya! OPR PDF telah disimpan ke Google Drive.\nID Rekod: ${result.oprId}`);
       clearDraft();
     } else {
       alert("Gagal menyimpan: " + result.message);
     }
   } catch (error) {
     hideLoading();
-    alert("Ralat Rangkaian/Server: " + error.message);
+    alert("Ralat Rangkaian / Penjanaan PDF: " + error.message);
   }
 }
 
