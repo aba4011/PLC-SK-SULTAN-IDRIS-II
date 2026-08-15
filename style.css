@@ -158,136 +158,139 @@ textarea { resize: vertical; }
 .preview-toolbar { margin-bottom: 15px; display: flex; gap: 10px; }
 
 /* ==========================================
-   FIXED A4 CANVAS SETUP (PADAT & PERSIS GAMBAR 2)
+   FIXED A4 CANVAS SETUP (KEMAS & PRESISE GAMBAR 2)
    ========================================== */
 .a4-page {
   width: 210mm;
   height: 297mm;
   background: var(--white);
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  padding: 0 12mm 8mm 12mm !important; /* Padatkan margin atas */
+  padding: 0 10mm 6mm 10mm !important;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
 }
 
-/* TOP NAVY BAR (BAR ATAS SEPERTI GAMBAR 2) */
-.a4-page::before {
-  content: "";
-  display: block;
-  width: calc(100% + 24mm);
+/* JALUR BIRU GELAP PALING ATAS */
+.top-navy-bar {
+  width: calc(100% + 20mm);
   height: 12px;
-  background-color: var(--navy);
-  margin-left: -12mm;
-  margin-right: -12mm;
-  margin-bottom: 10px;
+  background-color: #0f1035 !important;
+  margin-left: -10mm;
+  margin-right: -10mm;
+  margin-bottom: 4px;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
 }
 
-/* HEADER & LOGO PADAT */
-.opr-header { 
-  display: flex; 
-  align-items: center; 
+/* HEADER & LOGO POSITIONING */
+.opr-header {
+  position: relative;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 18px; 
-  padding-bottom: 2px;
-}
-
-.opr-logo { 
-  width: 70px !important; 
-  height: 70px !important; 
-  object-fit: contain; 
-}
-
-.opr-header-text {
-  text-align: center;
-  flex: 1;
-}
-
-.opr-header-text h1 { 
-  font-family: 'Cinzel Decorative', 'Cinzel', serif; 
-  font-size: 22pt !important; 
-  font-weight: 700;
-  color: #111; 
-  line-height: 1.0; 
-  letter-spacing: 1px;
-  transform: scaleY(1.15); /* Efek font tinggi/ramping macam Gambar 2 */
+  width: 100%;
   margin-bottom: 4px;
 }
 
-.opr-divider { 
-  height: 2px; 
-  background: linear-gradient(to right, transparent, var(--gold), transparent); 
-  margin: 6px 0 !important; 
-  position: relative;
+.opr-logo {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 75px !important;
+  height: 85px !important;
+  object-fit: contain;
 }
 
-.opr-header-text p { 
-  font-size: 8.5pt !important; 
-  font-weight: 600; 
-  color: #222;
-  letter-spacing: 0.5px;
-  margin-top: 3px;
+.opr-header-center {
+  width: 100%;
+  text-align: center;
 }
 
-.opr-header-text .sub-tagline {
-  color: #d9534f !important; /* Warna merah tajuk bawah seperti Gambar 2 */
+/* TAJUK SEKOLAH (NARROW & CONDENSED LIKE IMAGE 2) */
+.school-title {
+  font-family: 'Cinzel', serif;
+  font-size: 26pt !important;
   font-weight: bold;
-}
-
-/* TAJUK UTAMA OPR */
-.opr-title-block { 
-  text-align: center; 
-  margin-top: 6px;
-  margin-bottom: 10px; 
-}
-
-.opr-main-title { 
-  font-family: 'Cinzel Decorative', 'Cinzel', serif; 
-  font-size: 18pt !important; 
-  color: #111; 
-  letter-spacing: 2px; 
-  font-weight: 700;
+  color: #111;
+  line-height: 1.0;
+  letter-spacing: 0.5px;
+  margin: 0;
   transform: scaleY(1.15);
 }
 
-.opr-strategy { 
-  font-size: 9pt !important; 
-  color: var(--navy); 
-  margin-top: 4px;
-  font-weight: 600;
+.ornament-divider {
+  width: 60%;
+  height: 1.5px;
+  background: linear-gradient(to right, transparent, #c9a13b, #0f1035, #c9a13b, transparent);
+  margin: 4px auto;
 }
-/* KAD UTAMA OPR DENGAN BACKGROUND SEKOLAH */
+
+.school-address {
+  font-size: 8.5pt !important;
+  font-weight: 600;
+  color: #222;
+  letter-spacing: 0.2px;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.school-tagline {
+  font-size: 8pt !important;
+  font-weight: bold;
+  color: #d9534f !important;
+  margin-top: 1px;
+  margin-bottom: 2px;
+}
+
+.opr-main-title {
+  font-family: 'Cinzel', serif;
+  font-size: 22pt !important;
+  font-weight: bold;
+  color: #111;
+  letter-spacing: 1px;
+  line-height: 1.0;
+  margin-top: 3px;
+  margin-bottom: 1px;
+  transform: scaleY(1.15);
+}
+
+.opr-by {
+  font-size: 8.5pt !important;
+  font-weight: 600;
+  color: #1b1b50;
+  margin-top: 1px;
+  margin-bottom: 4px;
+}
+
+/* KAD UTAMA OPR */
 .opr-main-panel {
-  background-image: linear-gradient(rgba(20, 26, 60, 0.82), rgba(20, 26, 60, 0.82)), url('bg-sekolah.jpg') !important;
-  background-size: cover !important;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
   border-radius: 8px !important;
-  padding: 12px !important;
+  padding: 10px !important;
   color: var(--white) !important;
   display: flex;
   gap: 10px;
-  min-height: 92mm !important;
-  margin-bottom: 8px;
+  min-height: 86mm !important;
+  margin-bottom: 6px;
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
 }
 
 .panel-info { flex: 1.1; font-size: 8.5pt; color: var(--white); }
-.panel-info h3 { 
-  color: var(--gold); 
-  font-size: 12pt !important; 
-  margin-bottom: 8px; 
-  border-bottom: 1.5px solid var(--gold); 
-  padding-bottom: 3px; 
+.panel-info h3 {
+  color: var(--gold);
+  font-size: 11pt !important;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--gold);
+  padding-bottom: 3px;
   font-weight: 700;
 }
 .panel-info p {
   font-size: 8.5pt !important;
-  line-height: 1.4;
+  line-height: 1.35;
   margin-bottom: 2px;
 }
 
@@ -308,26 +311,26 @@ textarea { resize: vertical; }
 .ph-label { font-size: 7.5pt; color: #ddd; }
 
 /* KOTAK-KOTAK LAPORAN SEIMBANG */
-.opr-boxes-grid { 
-  display: grid; 
-  grid-template-columns: 1fr 1fr; 
-  gap: 8px !important; 
-  margin-top: 4px; 
+.opr-boxes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px !important;
+  margin-top: 2px;
 }
 
-.opr-box { 
-  border: 1.5px solid var(--gold) !important; 
-  border-radius: 6px !important; 
-  background: #fff; 
-  padding: 6px 8px !important; 
-  min-height: 32mm !important; 
+.opr-box {
+  border: 1.5px solid var(--gold) !important;
+  border-radius: 6px !important;
+  background: #fff;
+  padding: 6px 8px !important;
+  min-height: 32mm !important;
   display: flex;
   flex-direction: column;
 }
 
-.opr-box.full-width { 
-  grid-column: span 2; 
-  min-height: 24mm !important; 
+.opr-box.full-width {
+  grid-column: span 2;
+  min-height: 24mm !important;
 }
 
 .opr-box h4 {
@@ -346,24 +349,24 @@ textarea { resize: vertical; }
   print-color-adjust: exact !important;
 }
 
-.box-content { 
-  font-size: 8.5pt !important; 
-  line-height: 1.3; 
-  color: #222; 
+.box-content {
+  font-size: 8.5pt !important;
+  line-height: 1.3;
+  color: #222;
   flex: 1;
-  white-space: pre-wrap; 
-  word-break: break-word; 
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 /* BAHAGIAN TANDA TANGAN & FOOTER */
-.opr-signature { 
-  margin-top: 6px; 
-  font-size: 8.5pt; 
-  text-align: right; 
-  padding-right: 10mm; 
+.opr-signature {
+  margin-top: 4px;
+  font-size: 8.5pt;
+  text-align: right;
+  padding-right: 10mm;
 }
 
-.sig-name { font-weight: bold; margin-top: 15px; text-decoration: underline; }
+.sig-name { font-weight: bold; margin-top: 12px; text-decoration: underline; }
 
 .opr-footer {
   background: var(--navy) !important;
@@ -372,8 +375,8 @@ textarea { resize: vertical; }
   font-size: 8.5pt !important;
   font-weight: bold;
   letter-spacing: 1.5px;
-  padding: 5px 0;
-  margin: 6px -10mm -6mm -10mm !important;
+  padding: 4px 0;
+  margin: 4px -10mm -6mm -10mm !important;
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
 }
@@ -395,17 +398,15 @@ textarea { resize: vertical; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 .hidden { display: none !important; }
 
-/* ==========================================
-   TETAPAN PRINT KHAS (A4 PRINT CSS)
-   ========================================== */
+/* PRINT SETTINGS */
 @media print {
-  @page { 
-    size: A4 portrait; 
-    margin: 0; 
+  @page {
+    size: A4 portrait;
+    margin: 0;
   }
   
-  body { 
-    background: white !important; 
+  body {
+    background: white !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
@@ -414,18 +415,18 @@ textarea { resize: vertical; }
     visibility: hidden;
   }
 
-  .no-print, .form-panel, .preview-toolbar { 
-    display: none !important; 
+  .no-print, .form-panel, .preview-toolbar {
+    display: none !important;
   }
 
-  .app-container { 
-    display: block !important; 
-    height: auto !important; 
+  .app-container {
+    display: block !important;
+    height: auto !important;
   }
 
-  .preview-panel { 
-    padding: 0 !important; 
-    background: white !important; 
+  .preview-panel {
+    padding: 0 !important;
+    background: white !important;
     overflow: visible !important;
   }
 
