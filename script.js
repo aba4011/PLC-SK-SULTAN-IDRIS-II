@@ -1,5 +1,11 @@
+// ==========================================
+// KONFIGURASI URL APPS SCRIPT & GOOGLE DRIVE
+// ==========================================
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWq18_4jWa8GdVTVuWUl-DfyiaE5TCJtnbaCAmAEZF8qp6SCWWugRk2VkYZSP0qLlp1w/exec";
 const DRIVE_FOLDER_URL = "https://drive.google.com/drive/folders/1E9K6VqHlyjTA_WcGdk_gT73tSZKoOzfb";
+
+// Simpan senarai nama guru secara global
+window.teacherList = [];
 
 document.addEventListener('DOMContentLoaded', () => {
   loadTeacherNames();
@@ -10,35 +16,78 @@ document.addEventListener('DOMContentLoaded', () => {
   setupDriveButton();
 });
 
-// 1. Muat Senarai Nama Guru dari Google Sheet
+// ==========================================
+// 1. MUAT SENARAI NAMA GURU DARI APPS SCRIPT
+// ==========================================
 function loadTeacherNames() {
-  fetch(`${SCRIPT_URL}?action=getTeachers`)
-    .then(res => res.json())
+  fetch(`${SCRIPT_URL}?action=getTeachers`, {
+    method: 'GET',
+    redirect: 'follow'
+  })
     .then(res => {
-      if (res.status === 'success' && Array.isArray(res.data)) {
+      if (!res.ok) throw new Error("Respons rangkaian tidak OK");
+      return res.json();
+    })
+    .then(res => {
+      console.log("Data guru berjaya diterima:", res);
+      if (res.status === 'success' && Array.isArray(res.data) && res.data.length > 0) {
+        window.teacherList = res.data;
         populateTeacherDropdowns(res.data);
+      } else {
+        console.warn("Senarai guru kosong dari Apps Script. Membuka fallback manual.");
+        enableManualInputFallback();
       }
     })
-    .catch(err => console.error("Ralat muat nama guru:", err));
+    .catch(err => {
+      console.error("Ralat muat nama guru:", err);
+      enableManualInputFallback();
+    });
 }
 
+// Masukkan senarai nama ke dalam <select class="teacher-dropdown">
 function populateTeacherDropdowns(teachers) {
-  window.teacherList = teachers;
   const dropdowns = document.querySelectorAll('.teacher-dropdown');
   dropdowns.forEach(select => {
     const currentVal = select.value;
-    select.innerHTML = '<option value="">-- Pilih Nama Guru --</option>';
+    
+    // Tentukan label default mengikut konteks
+    let defaultLabel = "-- Pilih Nama Guru --";
+    if (select.id === "ketuaKumpulan") defaultLabel = "-- Pilih Ketua Kumpulan --";
+    if (select.id === "disediakanOleh") defaultLabel = "-- Pilih Penyedia Laporan --";
+    if (select.classList.contains("ahli-input")) defaultLabel = "-- Pilih Ahli --";
+
+    select.innerHTML = `<option value="">${defaultLabel}</option>`;
+    
     teachers.forEach(name => {
       const opt = document.createElement('option');
       opt.value = name;
       opt.textContent = name;
       select.appendChild(opt);
     });
+
     if (currentVal) select.value = currentVal;
   });
 }
 
-// 2. Tambah / Padam Ahli Kumpulan Dynamically
+// PERTAHANAN KECEMASAN: Jika Google Sheet gagal/tersekat, tukar dropdown jadi input teks biasa
+function enableManualInputFallback() {
+  const dropdowns = document.querySelectorAll('.teacher-dropdown');
+  dropdowns.forEach(select => {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.id = select.id;
+    input.name = select.name;
+    input.className = select.className;
+    input.required = select.required;
+    input.placeholder = "Taip nama di sini (Mod Manual)...";
+    
+    select.parentNode.replaceChild(input, select);
+  });
+}
+
+// ==========================================
+// 2. DINAMIK TAMBAH / PADAM AHLI KUMPULAN
+// ==========================================
 function setupDynamicAhli() {
   const btnAdd = document.getElementById('btnAddAhli');
   const container = document.getElementById('ahliContainer');
@@ -47,25 +96,35 @@ function setupDynamicAhli() {
     btnAdd.addEventListener('click', () => {
       const div = document.createElement('div');
       div.className = 'input-with-btn';
-      div.style.marginTop = '5px';
+      div.style.marginTop = '6px';
       
-      let optionsHtml = '<option value="">-- Pilih Ahli --</option>';
-      if (window.teacherList) {
+      // Jika senarai guru wujud, guna dropdown. Jika gagal, guna input biasa.
+      if (window.teacherList && window.teacherList.length > 0) {
+        let optionsHtml = '<option value="">-- Pilih Ahli --</option>';
         window.teacherList.forEach(t => optionsHtml += `<option value="${t}">${t}</option>`);
+
+        div.innerHTML = `
+          <select class="ahli-input teacher-dropdown" name="ahliKumpulan[]" required>${optionsHtml}</select>
+          <button type="button" class="btn-remove" style="background:#d32f2f; color:#fff; border:none; padding:6px 10px; border-radius:5px; margin-left:6px; cursor:pointer; font-weight:bold;">✕</button>
+        `;
+      } else {
+        div.innerHTML = `
+          <input type="text" class="ahli-input" name="ahliKumpulan[]" placeholder="Taip nama ahli..." required>
+          <button type="button" class="btn-remove" style="background:#d32f2f; color:#fff; border:none; padding:6px 10px; border-radius:5px; margin-left:6px; cursor:pointer; font-weight:bold;">✕</button>
+        `;
       }
 
-      div.innerHTML = `
-        <select class="ahli-input teacher-dropdown" name="ahliKumpulan[]">${optionsHtml}</select>
-        <button type="button" class="btn-remove" style="background:#d32f2f; color:#fff; border:none; padding:4px 8px; border-radius:4px; margin-left:4px; cursor:pointer;">X</button>
-      `;
       container.appendChild(div);
 
+      // Butang buang baris ahli
       div.querySelector('.btn-remove').addEventListener('click', () => div.remove());
     });
   }
 }
 
-// 3. Pratonton Gambar Live ke Slot Photo-Grid
+// ==========================================
+// 3. PRATONTON GAMBAR LIVE KE PHOTO GRID
+// ==========================================
 function setupImageHandlers() {
   for (let i = 1; i <= 4; i++) {
     const input = document.getElementById(`imgInput${i}`);
@@ -87,13 +146,16 @@ function setupImageHandlers() {
   }
 }
 
-// 4. Submit & Kemaskini Preview & Hantar ke Google Apps Script
+// ==========================================
+// 4. GENERATE OPR & HANTAR DATA KE APPS SCRIPT
+// ==========================================
 function setupFormSubmit() {
   const form = document.getElementById('oprForm');
   if (form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
 
+      // Ambil nilai borang
       const strategi = document.getElementById('strategiPlc').value;
       const tajuk = document.getElementById('tajukPlc').value;
       const tarikh = document.getElementById('tarikhPlc').value;
@@ -110,12 +172,14 @@ function setupFormSubmit() {
       const tindakan = document.getElementById('tindakanSusulan').value;
       const impak = document.getElementById('impakProgram').value;
 
+      // Format Tarikh ke DD/MM/YYYY
       let tarikhFormatted = tarikh;
       if (tarikh) {
         const p = tarikh.split('-');
         if (p.length === 3) tarikhFormatted = `${p[2]}/${p[1]}/${p[0]}`;
       }
 
+      // Format Masa AM/PM
       const formatTime = (t) => {
         if (!t) return '';
         const [h, m] = t.split(':');
@@ -127,7 +191,7 @@ function setupFormSubmit() {
 
       const masaStr = (masaMula && masaTamat) ? `${formatTime(masaMula)} - ${formatTime(masaTamat)}` : '-';
 
-      // Update Live Canvas Preview
+      // Kemaskini Teks Pratonton Kanvas (Right Panel)
       if (document.getElementById('pvStrategiText')) document.getElementById('pvStrategiText').textContent = strategi;
       if (document.getElementById('pvTajuk')) document.getElementById('pvTajuk').textContent = tajuk;
       if (document.getElementById('pvTarikhMasa')) document.getElementById('pvTarikhMasa').textContent = tarikhFormatted;
@@ -137,19 +201,21 @@ function setupFormSubmit() {
       if (document.getElementById('pvKetua')) document.getElementById('pvKetua').textContent = ketua;
       if (document.getElementById('pvDisediakan')) document.getElementById('pvDisediakan').textContent = disediakan;
 
-      // Kemaskini Senarai Ahli Kumpulan
-      const ahliSelects = document.querySelectorAll('#ahliContainer select');
+      // Kemaskini Senarai Ahli Kumpulan pada Canvas
+      const ahliElements = document.querySelectorAll('#ahliContainer .ahli-input');
       const pvAhliList = document.getElementById('pvAhliList');
       let membersArr = [];
+
       if (pvAhliList) {
         pvAhliList.innerHTML = '';
         let count = 0;
-        ahliSelects.forEach((sel) => {
-          if (sel.value.trim() !== '') {
+        ahliElements.forEach((el) => {
+          const val = el.value.trim();
+          if (val !== '') {
             count++;
-            membersArr.push(sel.value.trim());
+            membersArr.push(val);
             const li = document.createElement('li');
-            li.textContent = `${count}. ${sel.value.trim()}`;
+            li.textContent = `${count}. ${val}`;
             pvAhliList.appendChild(li);
           }
         });
@@ -161,7 +227,7 @@ function setupFormSubmit() {
       if (document.getElementById('pvTindakan')) document.getElementById('pvTindakan').textContent = tindakan;
       if (document.getElementById('pvImpak')) document.getElementById('pvImpak').textContent = impak;
 
-      // Hantar Data ke Google Apps Script (Hantar ke Drive/Sheet)
+      // Sediakan payload untuk Google Sheet
       const payload = {
         action: "saveOPR",
         data: {
@@ -184,7 +250,7 @@ function setupFormSubmit() {
       };
 
       const btnSubmit = document.getElementById('btnSubmit');
-      btnSubmit.textContent = "MENYIMPAN...";
+      btnSubmit.textContent = "MENYIMPAN DATA...";
       btnSubmit.disabled = true;
 
       fetch(SCRIPT_URL, {
@@ -195,22 +261,24 @@ function setupFormSubmit() {
       .then(res => {
         btnSubmit.textContent = "GENERATE OPR & SIMPAN";
         btnSubmit.disabled = false;
-        if(res.status === 'success') {
-          alert('✅ OPR Berjaya Dijana & Dihantar ke Google Drive!');
+        if (res.status === 'success') {
+          alert('✅ OPR Berjaya Dijana & Dihantar ke Rekod Google Sheet!');
         } else {
-          alert('⚠️ OPR Dikemaskini pada preview!');
+          alert('✅ OPR Berjaya Dijana pada Pratonton!');
         }
       })
       .catch(err => {
         btnSubmit.textContent = "GENERATE OPR & SIMPAN";
         btnSubmit.disabled = false;
-        alert('✅ OPR Berjaya Dijana pada Preview!');
+        alert('✅ OPR Berjaya Dijana pada Pratonton Canvas!');
       });
     });
   }
 }
 
-// 5. PDF Export Handler (Cetak OPR ke PDF)
+// ==========================================
+// 5. CETAK KERTAS OPR KE PDF
+// ==========================================
 function setupPrintHandler() {
   const btnPrint = document.getElementById('btnPrint');
   if (btnPrint) {
@@ -228,7 +296,9 @@ function setupPrintHandler() {
   }
 }
 
-// 6. Buka Link Google Drive
+// ==========================================
+// 6. PAUTAN KE GOOGLE DRIVE FOLDER
+// ==========================================
 function setupDriveButton() {
   const btnDrive = document.getElementById('btnDrive');
   if (btnDrive) {
