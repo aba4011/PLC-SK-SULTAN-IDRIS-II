@@ -1,7 +1,7 @@
 // ==========================================
 // KONFIGURASI URL APPS SCRIPT & GOOGLE DRIVE
 // ==========================================
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWq18_4jWa8GdVTVuWUl-DfyiaE5TCJtnbaCAmAEZF8qp6SCWWugRk2VkYZSP0qLlp1w/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyTkahlv6a0-LuvHCK9zTEf2vdtypyQVELnB7kMdAe6DfNz0mtN-7xZrY8vINUojhd2Vw/exec";
 const DRIVE_FOLDER_URL = "https://drive.google.com/drive/folders/1E9K6VqHlyjTA_WcGdk_gT73tSZKoOzfb";
 
 // Simpan senarai nama guru secara global
