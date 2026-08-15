@@ -1,7 +1,7 @@
 // ==========================================
 // KONFIGURASI URL APPS SCRIPT & GOOGLE DRIVE
 // ==========================================
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwgwoR2S_y_Pf6SXFsYgnteYZNuYhUYUoqcp-UrNZHfVjOTxYcsrlq9zGuMXtcanUOjyw/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWq18_4jWa8GdVTVuWUl-DfyiaE5TCJtnbaCAmAEZF8qp6SCWWugRk2VkYZSP0qLlp1w/exec";
 const DRIVE_FOLDER_URL = "https://drive.google.com/drive/folders/1E9K6VqHlyjTA_WcGdk_gT73tSZKoOzfb";
 
 // Simpan senarai nama guru secara global
@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupFormSubmit();
   setupPrintHandler();
   setupDriveButton();
+  setupLivePreview(); // Menyenaraikan semua input untuk real-time update
 });
 
 // ==========================================
@@ -50,7 +51,6 @@ function populateTeacherDropdowns(teachers) {
   dropdowns.forEach(select => {
     const currentVal = select.value;
     
-    // Tentukan label default mengikut konteks
     let defaultLabel = "-- Pilih Nama Guru --";
     if (select.id === "ketuaKumpulan") defaultLabel = "-- Pilih Ketua Kumpulan --";
     if (select.id === "disediakanOleh") defaultLabel = "-- Pilih Penyedia Laporan --";
@@ -67,9 +67,12 @@ function populateTeacherDropdowns(teachers) {
 
     if (currentVal) select.value = currentVal;
   });
+
+  // Jalankan kemaskini canvas selepas senarai dimuatkan
+  updateCanvasPreview();
 }
 
-// PERTAHANAN KECEMASAN: Jika Google Sheet gagal/tersekat, tukar dropdown jadi input teks biasa
+// MOD KECEMASAN: Jika Google Sheet gagal/tersekat, tukar dropdown jadi input teks biasa
 function enableManualInputFallback() {
   const dropdowns = document.querySelectorAll('.teacher-dropdown');
   dropdowns.forEach(select => {
@@ -83,10 +86,93 @@ function enableManualInputFallback() {
     
     select.parentNode.replaceChild(input, select);
   });
+  
+  setupLivePreview();
 }
 
 // ==========================================
-// 2. DINAMIK TAMBAH / PADAM AHLI KUMPULAN
+// 2. PRATONTON REAL-TIME (LIVE PREVIEW)
+// ==========================================
+function setupLivePreview() {
+  const form = document.getElementById('oprForm');
+  if (!form) return;
+
+  // Mendengar sebarang perubahan taip (input) atau pilihan (change)
+  form.addEventListener('input', updateCanvasPreview);
+  form.addEventListener('change', updateCanvasPreview);
+}
+
+function updateCanvasPreview() {
+  const strategi = document.getElementById('strategiPlc')?.value || 'Curriculum Mapping';
+  const tajuk = document.getElementById('tajukPlc')?.value || 'Tajuk PLC';
+  const tarikh = document.getElementById('tarikhPlc')?.value || '-';
+  const tempat = document.getElementById('tempatPlc')?.value || '-';
+  const masaMula = document.getElementById('masaMula')?.value || '';
+  const masaTamat = document.getElementById('masaTamat')?.value || '';
+  const kumpulan = document.getElementById('namaKumpulan')?.value || '-';
+  const ketua = document.getElementById('ketuaKumpulan')?.value || '-';
+  const disediakan = document.getElementById('disediakanOleh')?.value || '-';
+
+  const isu = document.getElementById('isuMasalah')?.value || 'Masukkan Isu/masalah.';
+  const objektif = document.getElementById('objektifProgram')?.value || 'Masukkan objektif program.';
+  const pelaksanaan = document.getElementById('pelaksanaanAktiviti')?.value || 'Masukkan pelaksanaan aktiviti';
+  const tindakan = document.getElementById('tindakanSusulan')?.value || 'Masukkan tindakan susulan';
+  const impak = document.getElementById('impakProgram')?.value || 'Masukkan Impak';
+
+  // Format Tarikh ke DD/MM/YYYY
+  let tarikhFormatted = tarikh;
+  if (tarikh && tarikh !== '-') {
+    const p = tarikh.split('-');
+    if (p.length === 3) tarikhFormatted = `${p[2]}/${p[1]}/${p[0]}`;
+  }
+
+  // Format Masa AM/PM
+  const formatTime = (t) => {
+    if (!t) return '';
+    const [h, m] = t.split(':');
+    let hours = parseInt(h, 10);
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12;
+    return `${hours}:${m} ${ampm}`;
+  };
+  const masaStr = (masaMula && masaTamat) ? `${formatTime(masaMula)} - ${formatTime(masaTamat)}` : '-';
+
+  // Kemaskini Teks Pratonton Kanvas
+  if (document.getElementById('pvStrategiText')) document.getElementById('pvStrategiText').textContent = strategi;
+  if (document.getElementById('pvTajuk')) document.getElementById('pvTajuk').textContent = tajuk;
+  if (document.getElementById('pvTarikhMasa')) document.getElementById('pvTarikhMasa').textContent = tarikhFormatted;
+  if (document.getElementById('pvTempat')) document.getElementById('pvTempat').textContent = tempat;
+  if (document.getElementById('pvMasa')) document.getElementById('pvMasa').textContent = masaStr;
+  if (document.getElementById('pvKumpulan')) document.getElementById('pvKumpulan').textContent = kumpulan;
+  if (document.getElementById('pvKetua')) document.getElementById('pvKetua').textContent = ketua;
+  if (document.getElementById('pvDisediakan')) document.getElementById('pvDisediakan').textContent = disediakan;
+
+  // Kemaskini Senarai Ahli Kumpulan
+  const ahliElements = document.querySelectorAll('#ahliContainer .ahli-input');
+  const pvAhliList = document.getElementById('pvAhliList');
+  if (pvAhliList) {
+    pvAhliList.innerHTML = '';
+    let count = 0;
+    ahliElements.forEach((el) => {
+      const val = el.value.trim();
+      if (val !== '') {
+        count++;
+        const li = document.createElement('li');
+        li.textContent = `${count}. ${val}`;
+        pvAhliList.appendChild(li);
+      }
+    });
+  }
+
+  if (document.getElementById('pvIsu')) document.getElementById('pvIsu').textContent = isu;
+  if (document.getElementById('pvObjektif')) document.getElementById('pvObjektif').textContent = objektif;
+  if (document.getElementById('pvPelaksanaan')) document.getElementById('pvPelaksanaan').textContent = pelaksanaan;
+  if (document.getElementById('pvTindakan')) document.getElementById('pvTindakan').textContent = tindakan;
+  if (document.getElementById('pvImpak')) document.getElementById('pvImpak').textContent = impak;
+}
+
+// ==========================================
+// 3. DINAMIK TAMBAH / PADAM AHLI KUMPULAN
 // ==========================================
 function setupDynamicAhli() {
   const btnAdd = document.getElementById('btnAddAhli');
@@ -98,7 +184,6 @@ function setupDynamicAhli() {
       div.className = 'input-with-btn';
       div.style.marginTop = '6px';
       
-      // Jika senarai guru wujud, guna dropdown. Jika gagal, guna input biasa.
       if (window.teacherList && window.teacherList.length > 0) {
         let optionsHtml = '<option value="">-- Pilih Ahli --</option>';
         window.teacherList.forEach(t => optionsHtml += `<option value="${t}">${t}</option>`);
@@ -116,14 +201,19 @@ function setupDynamicAhli() {
 
       container.appendChild(div);
 
-      // Butang buang baris ahli
-      div.querySelector('.btn-remove').addEventListener('click', () => div.remove());
+      // Padam baris ahli dan kemaskini preview secara automatik
+      div.querySelector('.btn-remove').addEventListener('click', () => {
+        div.remove();
+        updateCanvasPreview();
+      });
+      
+      setupLivePreview();
     });
   }
 }
 
 // ==========================================
-// 3. PRATONTON GAMBAR LIVE KE PHOTO GRID
+// 4. PRATONTON GAMBAR LIVE KE PHOTO GRID
 // ==========================================
 function setupImageHandlers() {
   for (let i = 1; i <= 4; i++) {
@@ -147,7 +237,7 @@ function setupImageHandlers() {
 }
 
 // ==========================================
-// 4. GENERATE OPR & HANTAR DATA KE APPS SCRIPT
+// 5. GENERATE OPR & HANTAR DATA KE APPS SCRIPT
 // ==========================================
 function setupFormSubmit() {
   const form = document.getElementById('oprForm');
@@ -155,7 +245,9 @@ function setupFormSubmit() {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      // Ambil nilai borang
+      // Kemaskini preview sekali lagi sebelum hantar
+      updateCanvasPreview();
+
       const strategi = document.getElementById('strategiPlc').value;
       const tajuk = document.getElementById('tajukPlc').value;
       const tarikh = document.getElementById('tarikhPlc').value;
@@ -172,14 +264,12 @@ function setupFormSubmit() {
       const tindakan = document.getElementById('tindakanSusulan').value;
       const impak = document.getElementById('impakProgram').value;
 
-      // Format Tarikh ke DD/MM/YYYY
       let tarikhFormatted = tarikh;
       if (tarikh) {
         const p = tarikh.split('-');
         if (p.length === 3) tarikhFormatted = `${p[2]}/${p[1]}/${p[0]}`;
       }
 
-      // Format Masa AM/PM
       const formatTime = (t) => {
         if (!t) return '';
         const [h, m] = t.split(':');
@@ -189,45 +279,12 @@ function setupFormSubmit() {
         return `${hours}:${m} ${ampm}`;
       };
 
-      const masaStr = (masaMula && masaTamat) ? `${formatTime(masaMula)} - ${formatTime(masaTamat)}` : '-';
-
-      // Kemaskini Teks Pratonton Kanvas (Right Panel)
-      if (document.getElementById('pvStrategiText')) document.getElementById('pvStrategiText').textContent = strategi;
-      if (document.getElementById('pvTajuk')) document.getElementById('pvTajuk').textContent = tajuk;
-      if (document.getElementById('pvTarikhMasa')) document.getElementById('pvTarikhMasa').textContent = tarikhFormatted;
-      if (document.getElementById('pvTempat')) document.getElementById('pvTempat').textContent = tempat;
-      if (document.getElementById('pvMasa')) document.getElementById('pvMasa').textContent = masaStr;
-      if (document.getElementById('pvKumpulan')) document.getElementById('pvKumpulan').textContent = kumpulan;
-      if (document.getElementById('pvKetua')) document.getElementById('pvKetua').textContent = ketua;
-      if (document.getElementById('pvDisediakan')) document.getElementById('pvDisediakan').textContent = disediakan;
-
-      // Kemaskini Senarai Ahli Kumpulan pada Canvas
       const ahliElements = document.querySelectorAll('#ahliContainer .ahli-input');
-      const pvAhliList = document.getElementById('pvAhliList');
       let membersArr = [];
+      ahliElements.forEach(el => {
+        if (el.value.trim() !== '') membersArr.push(el.value.trim());
+      });
 
-      if (pvAhliList) {
-        pvAhliList.innerHTML = '';
-        let count = 0;
-        ahliElements.forEach((el) => {
-          const val = el.value.trim();
-          if (val !== '') {
-            count++;
-            membersArr.push(val);
-            const li = document.createElement('li');
-            li.textContent = `${count}. ${val}`;
-            pvAhliList.appendChild(li);
-          }
-        });
-      }
-
-      if (document.getElementById('pvIsu')) document.getElementById('pvIsu').textContent = isu;
-      if (document.getElementById('pvObjektif')) document.getElementById('pvObjektif').textContent = objektif;
-      if (document.getElementById('pvPelaksanaan')) document.getElementById('pvPelaksanaan').textContent = pelaksanaan;
-      if (document.getElementById('pvTindakan')) document.getElementById('pvTindakan').textContent = tindakan;
-      if (document.getElementById('pvImpak')) document.getElementById('pvImpak').textContent = impak;
-
-      // Sediakan payload untuk Google Sheet
       const payload = {
         action: "saveOPR",
         data: {
@@ -277,7 +334,7 @@ function setupFormSubmit() {
 }
 
 // ==========================================
-// 5. CETAK KERTAS OPR KE PDF
+// 6. CETAK KERTAS OPR KE PDF
 // ==========================================
 function setupPrintHandler() {
   const btnPrint = document.getElementById('btnPrint');
@@ -297,7 +354,7 @@ function setupPrintHandler() {
 }
 
 // ==========================================
-// 6. PAUTAN KE GOOGLE DRIVE FOLDER
+// 7. PAUTAN KE GOOGLE DRIVE FOLDER
 // ==========================================
 function setupDriveButton() {
   const btnDrive = document.getElementById('btnDrive');
