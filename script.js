@@ -1,4 +1,4 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyTkahlv6a0-LuvHCK9zTEf2vdtypyQVELnB7kMdAe6DfNz0mtN-7xZrY8vINUojhd2Vw/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjFSIQPJhlLQEksbInsnAvokk4RfpU-pOWL6RpJmarXiTeARydlvpfOs5T_ej7WyqH5Q/exec";
 const DRIVE_FOLDER_URL = "https://drive.google.com/drive/folders/1E9K6VqHlyjTA_WcGdk_gT73tSZKoOzfb";
 
 window.teacherList = [];
