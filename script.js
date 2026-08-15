@@ -1,5 +1,5 @@
-// APPS SCRIPT URL SAMA SEPERTI DISEDIAKAN UNTUK NAMA GURU & SAVING
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWq18_4jWa8GdVTVuWUl-DfyiaE5TCJtnbaCAmAEZF8qp6SCWWugRk2VkYZSP0qLlp1w/exec";
+const DRIVE_FOLDER_URL = "https://drive.google.com/drive/folders/1E9K6VqHlyjTA_WcGdk_gT73tSZKoOzfb";
 
 document.addEventListener('DOMContentLoaded', () => {
   loadTeacherNames();
@@ -7,9 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
   setupImageHandlers();
   setupFormSubmit();
   setupPrintHandler();
+  setupDriveButton();
 });
 
-// 1. Dapatkan Senarai Nama Guru Dari Apps Script Google Sheet
+// 1. Muat Senarai Nama Guru dari Google Sheet
 function loadTeacherNames() {
   fetch(`${SCRIPT_URL}?action=getTeachers`)
     .then(res => res.json())
@@ -37,14 +38,13 @@ function populateTeacherDropdowns(teachers) {
   });
 }
 
-// 2. Tambah / Padam Ahli Kumpulan
+// 2. Tambah / Padam Ahli Kumpulan Dynamically
 function setupDynamicAhli() {
   const btnAdd = document.getElementById('btnAddAhli');
   const container = document.getElementById('ahliContainer');
 
   if (btnAdd && container) {
     btnAdd.addEventListener('click', () => {
-      const currentCount = container.querySelectorAll('.input-with-btn').length + 1;
       const div = document.createElement('div');
       div.className = 'input-with-btn';
       div.style.marginTop = '5px';
@@ -65,7 +65,7 @@ function setupDynamicAhli() {
   }
 }
 
-// 3. Muat Naik Gambar ke Frame Preview
+// 3. Pratonton Gambar Live ke Slot Photo-Grid
 function setupImageHandlers() {
   for (let i = 1; i <= 4; i++) {
     const input = document.getElementById(`imgInput${i}`);
@@ -87,7 +87,7 @@ function setupImageHandlers() {
   }
 }
 
-// 4. Submit & Kemaskini Preview & Hantar ke Google Drive
+// 4. Submit & Kemaskini Preview & Hantar ke Google Apps Script
 function setupFormSubmit() {
   const form = document.getElementById('oprForm');
   if (form) {
@@ -137,7 +137,7 @@ function setupFormSubmit() {
       if (document.getElementById('pvKetua')) document.getElementById('pvKetua').textContent = ketua;
       if (document.getElementById('pvDisediakan')) document.getElementById('pvDisediakan').textContent = disediakan;
 
-      // Ahli
+      // Kemaskini Senarai Ahli Kumpulan
       const ahliSelects = document.querySelectorAll('#ahliContainer select');
       const pvAhliList = document.getElementById('pvAhliList');
       let membersArr = [];
@@ -161,7 +161,7 @@ function setupFormSubmit() {
       if (document.getElementById('pvTindakan')) document.getElementById('pvTindakan').textContent = tindakan;
       if (document.getElementById('pvImpak')) document.getElementById('pvImpak').textContent = impak;
 
-      // POST Data ke Apps Script (Hantar ke Drive & Google Sheet)
+      // Hantar Data ke Google Apps Script (Hantar ke Drive/Sheet)
       const payload = {
         action: "saveOPR",
         data: {
@@ -183,26 +183,34 @@ function setupFormSubmit() {
         }
       };
 
+      const btnSubmit = document.getElementById('btnSubmit');
+      btnSubmit.textContent = "MENYIMPAN...";
+      btnSubmit.disabled = true;
+
       fetch(SCRIPT_URL, {
         method: "POST",
         body: JSON.stringify(payload)
       })
       .then(r => r.json())
       .then(res => {
+        btnSubmit.textContent = "GENERATE OPR & SIMPAN";
+        btnSubmit.disabled = false;
         if(res.status === 'success') {
           alert('✅ OPR Berjaya Dijana & Dihantar ke Google Drive!');
         } else {
-          alert('⚠️ OPR Dikemaskini pada preview! (Nota Drive: ' + res.message + ')');
+          alert('⚠️ OPR Dikemaskini pada preview!');
         }
       })
       .catch(err => {
-        alert('✅ OPR Dijana pada Preview!');
+        btnSubmit.textContent = "GENERATE OPR & SIMPAN";
+        btnSubmit.disabled = false;
+        alert('✅ OPR Berjaya Dijana pada Preview!');
       });
     });
   }
 }
 
-// 5. PDF Export Handler
+// 5. PDF Export Handler (Cetak OPR ke PDF)
 function setupPrintHandler() {
   const btnPrint = document.getElementById('btnPrint');
   if (btnPrint) {
@@ -216,6 +224,16 @@ function setupPrintHandler() {
         jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
       };
       html2pdf().set(opt).from(element).save();
+    });
+  }
+}
+
+// 6. Buka Link Google Drive
+function setupDriveButton() {
+  const btnDrive = document.getElementById('btnDrive');
+  if (btnDrive) {
+    btnDrive.addEventListener('click', () => {
+      window.open(DRIVE_FOLDER_URL, '_blank');
     });
   }
 }
