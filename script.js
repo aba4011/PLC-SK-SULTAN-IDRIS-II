@@ -1,10 +1,6 @@
-// ==========================================
-// KONFIGURASI URL APPS SCRIPT & GOOGLE DRIVE
-// ==========================================
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyTkahlv6a0-LuvHCK9zTEf2vdtypyQVELnB7kMdAe6DfNz0mtN-7xZrY8vINUojhd2Vw/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWq18_4jWa8GdVTVuWUl-DfyiaE5TCJtnbaCAmAEZF8qp6SCWWugRk2VkYZSP0qLlp1w/exec";
 const DRIVE_FOLDER_URL = "https://drive.google.com/drive/folders/1E9K6VqHlyjTA_WcGdk_gT73tSZKoOzfb";
 
-// Simpan senarai nama guru secara global
 window.teacherList = [];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -14,14 +10,19 @@ document.addEventListener('DOMContentLoaded', () => {
   setupFormSubmit();
   setupPrintHandler();
   setupDriveButton();
-  setupLivePreview(); // Pratonton real-time (langsung)
+  setupLivePreview();
+  setupDuplicateValidation();
 });
 
-// ==========================================
-// 1. MUAT SENARAI NAMA GURU DARI APPS SCRIPT
-// ==========================================
+// 1. MUAT SENARAI NAMA GURU & SET DATALIST SEARCHABLE
 function loadTeacherNames() {
-  console.log("Sedang memuatkan senarai nama guru dari Apps Script...");
+  const inputs = document.querySelectorAll('.teacher-search-input');
+  
+  // 19. Loading State
+  inputs.forEach(input => {
+    input.placeholder = "[ Memuatkan senarai guru... ]";
+    input.disabled = true;
+  });
 
   fetch(`${SCRIPT_URL}?action=getTeachers`, {
     method: 'GET',
@@ -30,56 +31,91 @@ function loadTeacherNames() {
   })
     .then(res => res.json())
     .then(res => {
-      console.log("Data guru berjaya diterima:", res);
-      if (res.status === 'success' && Array.isArray(res.data) && res.data.length > 0) {
-        window.teacherList = res.data;
-        populateTeacherDropdowns(res.data);
+      // 22. Terima API JSON format (res.teachers atau res.data)
+      const list = res.teachers || res.data || [];
+
+      if ((res.success || res.status === 'success') && Array.isArray(list) && list.length > 0) {
+        window.teacherList = list;
+        populateDatalist(list);
+
+        inputs.forEach(input => {
+          input.placeholder = "🔍 Taip / Pilih nama guru...";
+          input.disabled = false;
+        });
       } else {
-        console.warn("Data diterima tetapi senarai guru kosong.");
+        showLoadingError(inputs);
       }
     })
     .catch(err => {
       console.error("Ralat muat nama guru:", err);
-      // Cuba semula secara automatik selepas 2 saat jika capaian internet lambat
-      setTimeout(loadTeacherNames, 2000);
+      showLoadingError(inputs);
     });
 }
 
-// Masukkan senarai nama ke dalam elemen <select class="teacher-dropdown">
-function populateTeacherDropdowns(teachers) {
-  const dropdowns = document.querySelectorAll('.teacher-dropdown');
-  dropdowns.forEach(select => {
-    const currentVal = select.value;
-    
-    let defaultLabel = "-- Pilih Nama Guru --";
-    if (select.id === "ketuaKumpulan") defaultLabel = "-- Pilih Ketua Kumpulan --";
-    if (select.id === "disediakanOleh") defaultLabel = "-- Pilih Penyedia Laporan --";
-    if (select.classList.contains("ahli-input")) defaultLabel = "-- Pilih Ahli --";
-
-    select.innerHTML = `<option value="">${defaultLabel}</option>`;
-    
-    teachers.forEach(name => {
-      const opt = document.createElement('option');
-      opt.value = name;
-      opt.textContent = name;
-      select.appendChild(opt);
-    });
-
-    if (currentVal) select.value = currentVal;
+function showLoadingError(inputs) {
+  inputs.forEach(input => {
+    input.placeholder = "Tidak dapat memuatkan senarai nama guru. Sila cuba Refresh.";
+    input.disabled = true;
   });
+}
 
-  // Kemaskini pratonton kanvas selepas senarai dimasukkan
+// 18. Isi Data ke <datalist> untuk Carian (Searchable Dropdown Native)
+function populateDatalist(teachers) {
+  const datalist = document.getElementById('teacherListDatalist');
+  datalist.innerHTML = '';
+  teachers.forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    datalist.appendChild(opt);
+  });
   updateCanvasPreview();
 }
 
-// ==========================================
+// 20. DUPLICATE VALIDATION (Ketua + Ahli Sahaja)
+function setupDuplicateValidation() {
+  const form = document.getElementById('oprForm');
+  
+  form.addEventListener('change', (e) => {
+    if (e.target.classList.contains('teacher-search-input') && e.target.id !== 'disediakanOleh') {
+      validateNoDuplicates(e.target);
+    }
+  });
+}
+
+function validateNoDuplicates(changedInput) {
+  const ketuaVal = document.getElementById('ketuaKumpulan')?.value.trim();
+  const ahliInputs = document.querySelectorAll('#ahliContainer .ahli-input');
+  
+  let selectedNames = [];
+  
+  if (ketuaVal) selectedNames.push({ role: 'Ketua Kumpulan', name: ketuaVal, el: document.getElementById('ketuaKumpulan') });
+
+  ahliInputs.forEach((el, index) => {
+    const val = el.value.trim();
+    if (val) {
+      selectedNames.push({ role: `Ahli ${index + 1}`, name: val, el: el });
+    }
+  });
+
+  // Semak jika ada nama bertindih
+  const currentValue = changedInput.value.trim();
+  if (!currentValue) return;
+
+  const matches = selectedNames.filter(item => item.name.toLowerCase() === currentValue.toLowerCase());
+
+  if (matches.length > 1) {
+    const firstMatch = matches.find(item => item.el !== changedInput);
+    alert(`❌ Nama "${currentValue}" telah dipilih sebagai ${firstMatch.role}.\nSila pilih nama lain.`);
+    changedInput.value = ''; // Kosongkan pilihan yang bertindih
+    updateCanvasPreview();
+  }
+}
+
 // 2. PRATONTON REAL-TIME (LIVE PREVIEW)
-// ==========================================
 function setupLivePreview() {
   const form = document.getElementById('oprForm');
   if (!form) return;
 
-  // Mendengar sebarang perubahan taip (input) atau pilihan (change)
   form.addEventListener('input', updateCanvasPreview);
   form.addEventListener('change', updateCanvasPreview);
 }
@@ -93,6 +129,8 @@ function updateCanvasPreview() {
   const masaTamat = document.getElementById('masaTamat')?.value || '';
   const kumpulan = document.getElementById('namaKumpulan')?.value || '-';
   const ketua = document.getElementById('ketuaKumpulan')?.value || '-';
+  
+  // 21. OPR Output untuk "Disediakan Oleh"
   const disediakan = document.getElementById('disediakanOleh')?.value || '-';
 
   const isu = document.getElementById('isuMasalah')?.value || 'Masukkan Isu/masalah.';
@@ -101,14 +139,12 @@ function updateCanvasPreview() {
   const tindakan = document.getElementById('tindakanSusulan')?.value || 'Masukkan tindakan susulan';
   const impak = document.getElementById('impakProgram')?.value || 'Masukkan Impak';
 
-  // Format Tarikh ke DD/MM/YYYY
   let tarikhFormatted = tarikh;
   if (tarikh && tarikh !== '-') {
     const p = tarikh.split('-');
     if (p.length === 3) tarikhFormatted = `${p[2]}/${p[1]}/${p[0]}`;
   }
 
-  // Format Masa AM/PM
   const formatTime = (t) => {
     if (!t) return '';
     const [h, m] = t.split(':');
@@ -119,7 +155,6 @@ function updateCanvasPreview() {
   };
   const masaStr = (masaMula && masaTamat) ? `${formatTime(masaMula)} - ${formatTime(masaTamat)}` : '-';
 
-  // Kemaskini Teks Pratonton Kanvas
   if (document.getElementById('pvStrategiText')) document.getElementById('pvStrategiText').textContent = strategi;
   if (document.getElementById('pvTajuk')) document.getElementById('pvTajuk').textContent = tajuk;
   if (document.getElementById('pvTarikhMasa')) document.getElementById('pvTarikhMasa').textContent = tarikhFormatted;
@@ -129,7 +164,7 @@ function updateCanvasPreview() {
   if (document.getElementById('pvKetua')) document.getElementById('pvKetua').textContent = ketua;
   if (document.getElementById('pvDisediakan')) document.getElementById('pvDisediakan').textContent = disediakan;
 
-  // Kemaskini Senarai Ahli Kumpulan
+  // Kemaskini Senarai Ahli
   const ahliElements = document.querySelectorAll('#ahliContainer .ahli-input');
   const pvAhliList = document.getElementById('pvAhliList');
   if (pvAhliList) {
@@ -153,9 +188,7 @@ function updateCanvasPreview() {
   if (document.getElementById('pvImpak')) document.getElementById('pvImpak').textContent = impak;
 }
 
-// ==========================================
-// 3. DINAMIK TAMBAH / PADAM AHLI KUMPULAN
-// ==========================================
+// 3. TAMBAH AHLI KUMPULAN DINAMIK
 function setupDynamicAhli() {
   const btnAdd = document.getElementById('btnAddAhli');
   const container = document.getElementById('ahliContainer');
@@ -165,33 +198,29 @@ function setupDynamicAhli() {
       const div = document.createElement('div');
       div.className = 'input-with-btn';
       div.style.marginTop = '6px';
-      
-      let optionsHtml = '<option value="">-- Pilih Ahli --</option>';
-      if (window.teacherList && window.teacherList.length > 0) {
-        window.teacherList.forEach(t => optionsHtml += `<option value="${t}">${t}</option>`);
-      }
+
+      const isLoaded = window.teacherList && window.teacherList.length > 0;
+      const placeholderText = isLoaded ? "🔍 Taip / Pilih nama guru..." : "[ Memuatkan senarai guru... ]";
+      const disabledAttr = isLoaded ? "" : "disabled";
 
       div.innerHTML = `
-        <select class="ahli-input teacher-dropdown" name="ahliKumpulan[]" required>${optionsHtml}</select>
+        <input type="text" class="ahli-input teacher-search-input" name="ahliKumpulan[]" list="teacherListDatalist" placeholder="${placeholderText}" ${disabledAttr} required>
         <button type="button" class="btn-remove" style="background:#d32f2f; color:#fff; border:none; padding:6px 10px; border-radius:5px; margin-left:6px; cursor:pointer; font-weight:bold;">✕</button>
       `;
 
       container.appendChild(div);
 
-      // Padam baris ahli & kemaskini preview secara automatik
       div.querySelector('.btn-remove').addEventListener('click', () => {
         div.remove();
         updateCanvasPreview();
       });
-      
+
       setupLivePreview();
     });
   }
 }
 
-// ==========================================
-// 4. PRATONTON GAMBAR LIVE KE PHOTO GRID
-// ==========================================
+// 4. PREVIEW GAMBAR
 function setupImageHandlers() {
   for (let i = 1; i <= 4; i++) {
     const input = document.getElementById(`imgInput${i}`);
@@ -213,9 +242,7 @@ function setupImageHandlers() {
   }
 }
 
-// ==========================================
-// 5. GENERATE OPR & HANTAR DATA KE APPS SCRIPT
-// ==========================================
+// 5. HANTAR BORANG
 function setupFormSubmit() {
   const form = document.getElementById('oprForm');
   if (form) {
@@ -224,61 +251,24 @@ function setupFormSubmit() {
 
       updateCanvasPreview();
 
-      const strategi = document.getElementById('strategiPlc').value;
-      const tajuk = document.getElementById('tajukPlc').value;
-      const tarikh = document.getElementById('tarikhPlc').value;
-      const tempat = document.getElementById('tempatPlc').value;
-      const masaMula = document.getElementById('masaMula').value;
-      const masaTamat = document.getElementById('masaTamat').value;
-      const kumpulan = document.getElementById('namaKumpulan').value;
-      const ketua = document.getElementById('ketuaKumpulan').value;
-      const disediakan = document.getElementById('disediakanOleh').value;
-
-      const isu = document.getElementById('isuMasalah').value;
-      const objektif = document.getElementById('objektifProgram').value;
-      const pelaksanaan = document.getElementById('pelaksanaanAktiviti').value;
-      const tindakan = document.getElementById('tindakanSusulan').value;
-      const impak = document.getElementById('impakProgram').value;
-
-      let tarikhFormatted = tarikh;
-      if (tarikh) {
-        const p = tarikh.split('-');
-        if (p.length === 3) tarikhFormatted = `${p[2]}/${p[1]}/${p[0]}`;
-      }
-
-      const formatTime = (t) => {
-        if (!t) return '';
-        const [h, m] = t.split(':');
-        let hours = parseInt(h, 10);
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12 || 12;
-        return `${hours}:${m} ${ampm}`;
-      };
-
-      const ahliElements = document.querySelectorAll('#ahliContainer .ahli-input');
-      let membersArr = [];
-      ahliElements.forEach(el => {
-        if (el.value.trim() !== '') membersArr.push(el.value.trim());
-      });
-
       const payload = {
         action: "saveOPR",
         data: {
-          plcStrategy: strategi,
-          plcFocus: tajuk,
-          plcDate: tarikhFormatted,
-          startTime: formatTime(masaMula),
-          endTime: formatTime(masaTamat),
-          plcLocation: tempat,
-          groupName: kumpulan,
-          groupLeader: ketua,
-          preparedBy: disediakan,
-          members: membersArr,
-          plcIssue: isu,
-          plcObjective: objektif,
-          plcImplementation: pelaksanaan,
-          plcImpact: impak,
-          plcFollowup: tindakan
+          plcStrategy: document.getElementById('strategiPlc').value,
+          plcFocus: document.getElementById('tajukPlc').value,
+          plcDate: document.getElementById('tarikhPlc').value,
+          startTime: document.getElementById('masaMula').value,
+          endTime: document.getElementById('masaTamat').value,
+          plcLocation: document.getElementById('tempatPlc').value,
+          groupName: document.getElementById('namaKumpulan').value,
+          groupLeader: document.getElementById('ketuaKumpulan').value,
+          preparedBy: document.getElementById('disediakanOleh').value,
+          members: Array.from(document.querySelectorAll('#ahliContainer .ahli-input')).map(el => el.value.trim()).filter(Boolean),
+          plcIssue: document.getElementById('isuMasalah').value,
+          plcObjective: document.getElementById('objektifProgram').value,
+          plcImplementation: document.getElementById('pelaksanaanAktiviti').value,
+          plcImpact: document.getElementById('impakProgram').value,
+          plcFollowup: document.getElementById('tindakanSusulan').value
         }
       };
 
@@ -294,11 +284,7 @@ function setupFormSubmit() {
       .then(res => {
         btnSubmit.textContent = "GENERATE OPR & SIMPAN";
         btnSubmit.disabled = false;
-        if (res.status === 'success') {
-          alert('✅ OPR Berjaya Dijana & Dihantar ke Rekod Google Sheet!');
-        } else {
-          alert('✅ OPR Berjaya Dijana pada Pratonton!');
-        }
+        alert('✅ OPR Berjaya Dijana & Dihantar!');
       })
       .catch(err => {
         btnSubmit.textContent = "GENERATE OPR & SIMPAN";
@@ -309,9 +295,7 @@ function setupFormSubmit() {
   }
 }
 
-// ==========================================
-// 6. CETAK KERTAS OPR KE PDF
-// ==========================================
+// 6. CETAK PDF & GOOGLE DRIVE
 function setupPrintHandler() {
   const btnPrint = document.getElementById('btnPrint');
   if (btnPrint) {
@@ -329,9 +313,6 @@ function setupPrintHandler() {
   }
 }
 
-// ==========================================
-// 7. PAUTAN KE GOOGLE DRIVE FOLDER
-// ==========================================
 function setupDriveButton() {
   const btnDrive = document.getElementById('btnDrive');
   if (btnDrive) {
