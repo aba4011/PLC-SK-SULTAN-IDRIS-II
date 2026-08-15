@@ -17,19 +17,37 @@
         <p>SK SULTAN IDRIS II</p>
       </div>
 
+      <!-- Datalist Terkumpul Untuk Carian Nama Guru -->
+      <datalist id="teacherListDatalist"></datalist>
+
       <form id="oprForm">
         <!-- FIELDSET 1: MAKLUMAT PLC -->
         <fieldset class="form-group">
           <legend>Maklumat PLC</legend>
 
-          <label for="strategiPlc">Strategi PLC *</label>
+          <label for="strategiPlc">Strategi PLC (20 Pilihan) *</label>
           <select id="strategiPlc" name="strategiPlc" required>
-            <option value="Curriculum Mapping">Curriculum Mapping</option>
-            <option value="Lesson Study">Lesson Study</option>
-            <option value="Peer Coaching">Peer Coaching</option>
+            <option value="">-- Pilih Strategi PLC --</option>
+            <option value="Discussion Protocols">Discussion Protocols</option>
+            <option value="Book Clubs">Book Clubs</option>
+            <option value="Study Groups">Study Groups</option>
+            <option value="Video Critiques of Teaching Moments">Video Critiques of Teaching Moments</option>
             <option value="Learning Walks">Learning Walks</option>
+            <option value="Peer Coaching / Instructional Coaches">Peer Coaching / Instructional Coaches</option>
+            <option value="Lesson Study">Lesson Study</option>
             <option value="Teacher Sharing Sessions">Teacher Sharing Sessions</option>
-            <option value="Video Analysis">Video Analysis</option>
+            <option value="Data Analysis">Data Analysis</option>
+            <option value="Curriculum Mapping">Curriculum Mapping</option>
+            <option value="Common Assessments">Common Assessments</option>
+            <option value="Critical / Friends Groups">Critical / Friends Groups</option>
+            <option value="Horizontal & Vertical Teams">Horizontal & Vertical Teams</option>
+            <option value="New Teacher Induction / Mentoring">New Teacher Induction / Mentoring</option>
+            <option value="Interdisciplinary Units & Projects">Interdisciplinary Units & Projects</option>
+            <option value="Problem Solving Groups">Problem Solving Groups</option>
+            <option value="Vision Activity">Vision Activity</option>
+            <option value="Guiding Principles">Guiding Principles</option>
+            <option value="Value Activities">Value Activities</option>
+            <option value="Common Rituals and Strategies">Common Rituals and Strategies</option>
           </select>
 
           <label for="tajukPlc">Tajuk PLC *</label>
@@ -60,25 +78,22 @@
           <label for="namaKumpulan">Nama Kumpulan *</label>
           <input type="text" id="namaKumpulan" name="namaKumpulan" required placeholder="Nama kumpulan">
 
+          <!-- SEARCHABLE DROPDOWN KETUA KUMPULAN -->
           <label for="ketuaKumpulan">Ketua Kumpulan *</label>
-          <select id="ketuaKumpulan" name="ketuaKumpulan" class="teacher-dropdown" required>
-            <option value="">-- Pilih Ketua Kumpulan --</option>
-          </select>
+          <input type="text" id="ketuaKumpulan" name="ketuaKumpulan" class="teacher-search-input" list="teacherListDatalist" placeholder="[ Memuatkan senarai guru... ]" disabled required>
 
+          <!-- SEARCHABLE DROPDOWN AHLI KUMPULAN -->
           <label>Nama Ahli Kumpulan *</label>
           <div id="ahliContainer">
             <div class="input-with-btn">
-              <select class="ahli-input teacher-dropdown" name="ahliKumpulan[]" required>
-                <option value="">-- Pilih Ahli --</option>
-              </select>
+              <input type="text" class="ahli-input teacher-search-input" name="ahliKumpulan[]" list="teacherListDatalist" placeholder="[ Memuatkan senarai guru... ]" disabled required>
             </div>
           </div>
           <button type="button" id="btnAddAhli" class="btn-secondary" style="margin-top: 8px;">+ TAMBAH AHLI</button>
 
+          <!-- SEARCHABLE DROPDOWN DISEDIAKAN OLEH -->
           <label for="disediakanOleh" style="margin-top: 12px;">Disediakan Oleh *</label>
-          <select id="disediakanOleh" name="disediakanOleh" class="teacher-dropdown" required>
-            <option value="">-- Pilih Penyedia Laporan --</option>
-          </select>
+          <input type="text" id="disediakanOleh" name="disediakanOleh" class="teacher-search-input" list="teacherListDatalist" placeholder="[ Memuatkan senarai guru... ]" disabled required>
         </fieldset>
 
         <!-- FIELDSET 2: MUAT NAIK GAMBAR -->
@@ -187,7 +202,6 @@
 
         <!-- SECTION KANDUNGAN LAPORAN -->
         <div class="report-content-grid">
-          <!-- LAJUR KIRI -->
           <div class="report-col col-left">
             <div class="gold-box">
               <div class="gold-pill">ISU/MASALAH</div>
@@ -205,7 +219,6 @@
             </div>
           </div>
 
-          <!-- LAJUR KANAN -->
           <div class="report-col col-right">
             <div class="gold-box">
               <div class="gold-pill">PELAKSANAAN AKTIVITI</div>
@@ -219,7 +232,7 @@
           </div>
         </div>
 
-        <!-- FOOTER PREVIEW -->
+        <!-- FOOTER PREVIEW (Disediakan Oleh Dipaparkan Di Sini) -->
         <div class="paper-footer">
           <div class="disediakan-text">
             Disediakan oleh: <span id="pvDisediakan">-</span>
@@ -234,7 +247,6 @@
 
   </div>
 
-  <!-- LIBRARIES & SCRIPTS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="script.js" defer></script>
 </body>
