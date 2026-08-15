@@ -215,8 +215,10 @@ input:focus, select:focus, textarea:focus {
 }
 
 .school-logo {
-  width: 75px;
-  height: auto;
+  width: 75px !important;
+  max-width: 75px !important;
+  height: auto !important;
+  object-fit: contain;
 }
 
 .school-details {
