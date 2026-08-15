@@ -37,17 +37,18 @@ function handleGetTeachers() {
     const data = sheet.getDataRange().getValues();
     const teachers = [];
     
-    // Langkau Baris Tajuk / Header (i = 1)
+    // Baris 1 ialah header. Mula membaca dari baris 2 (i = 1)
     for (let i = 1; i < data.length; i++) {
-      const nama = data[i][1];
-      const status = data[i][2];
+      const nama = data[i][1];    // Lajur B: Nama Guru
+      const status = data[i][2];  // Lajur C: Status
       
-      // Semakan lebih fleksibel: buang jarak kosong & abaikan saiz huruf (aktif/Aktif/AKTIF)
+      // Ambil nama jika status mengandungi perkataan "Aktif"
       if (status && String(status).trim().toLowerCase() === "aktif" && nama) {
         teachers.push(String(nama).trim());
       }
     }
 
+    // Format ini wajib memulangkan key 'success' dan 'teachers'
     return ContentService.createTextOutput(JSON.stringify({
       success: true,
       teachers: teachers
