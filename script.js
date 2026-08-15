@@ -243,54 +243,76 @@ function setupImageHandlers() {
 }
 
 // 5. HANTAR BORANG
+// HANTAR BORANG & SIMPAN AUTOMATIK KE GOOGLE DRIVE
 function setupFormSubmit() {
   const form = document.getElementById('oprForm');
   if (form) {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-
       updateCanvasPreview();
 
-      const payload = {
-        action: "saveOPR",
-        data: {
-          plcStrategy: document.getElementById('strategiPlc').value,
-          plcFocus: document.getElementById('tajukPlc').value,
-          plcDate: document.getElementById('tarikhPlc').value,
-          startTime: document.getElementById('masaMula').value,
-          endTime: document.getElementById('masaTamat').value,
-          plcLocation: document.getElementById('tempatPlc').value,
-          groupName: document.getElementById('namaKumpulan').value,
-          groupLeader: document.getElementById('ketuaKumpulan').value,
-          preparedBy: document.getElementById('disediakanOleh').value,
-          members: Array.from(document.querySelectorAll('#ahliContainer .ahli-input')).map(el => el.value.trim()).filter(Boolean),
-          plcIssue: document.getElementById('isuMasalah').value,
-          plcObjective: document.getElementById('objektifProgram').value,
-          plcImplementation: document.getElementById('pelaksanaanAktiviti').value,
-          plcImpact: document.getElementById('impakProgram').value,
-          plcFollowup: document.getElementById('tindakanSusulan').value
-        }
-      };
-
       const btnSubmit = document.getElementById('btnSubmit');
-      btnSubmit.textContent = "MENYIMPAN DATA...";
+      btnSubmit.textContent = "⏳ SEDANG MENJANA PDF & MENYIMPAN KE DRIVE...";
       btnSubmit.disabled = true;
 
-      fetch(SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify(payload)
-      })
-      .then(r => r.json())
-      .then(res => {
+      try {
+        // 1. Generate OPR Canvas kepada PDF Base64
+        const element = document.getElementById('oprPaper');
+        const opt = {
+          margin: 0,
+          filename: 'temp_opr.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+
+        const worker = html2pdf().set(opt).from(element);
+        const pdfBase64 = await worker.outputPdf('datauristring');
+
+        // 2. Sediakan Payload Data
+        const payload = {
+          action: "saveOPR",
+          pdfBase64: pdfBase64,
+          data: {
+            plcStrategy: document.getElementById('strategiPlc').value,
+            plcFocus: document.getElementById('tajukPlc').value,
+            plcDate: document.getElementById('tarikhPlc').value,
+            startTime: document.getElementById('masaMula').value,
+            endTime: document.getElementById('masaTamat').value,
+            plcLocation: document.getElementById('tempatPlc').value,
+            groupName: document.getElementById('namaKumpulan').value,
+            groupLeader: document.getElementById('ketuaKumpulan').value,
+            preparedBy: document.getElementById('disediakanOleh').value,
+            members: Array.from(document.querySelectorAll('#ahliContainer .ahli-input')).map(el => el.value.trim()).filter(Boolean),
+            plcIssue: document.getElementById('isuMasalah').value,
+            plcObjective: document.getElementById('objektifProgram').value,
+            plcImplementation: document.getElementById('pelaksanaanAktiviti').value,
+            plcImpact: document.getElementById('impakProgram').value,
+            plcFollowup: document.getElementById('tindakanSusulan').value
+          }
+        };
+
+        // 3. Hantar Data & Base64 PDF ke Apps Script
+        const response = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify(payload)
+        });
+
+        const res = await response.json();
+
+        if (res.success) {
+          alert('✅ OPR Berjaya Dijana & Tersimpan Secara Automatik Dalam Google Drive!');
+        } else {
+          alert('⚠️ Data disimpan tetapi fail PDF gagal dimuat naik: ' + (res.error || 'Ralat tidak diketahui'));
+        }
+
+      } catch (err) {
+        console.error("Ralat simpan OPR:", err);
+        alert('❌ Ralat berlaku semasa menyahut penjanan PDF.');
+      } finally {
         btnSubmit.textContent = "GENERATE OPR & SIMPAN";
         btnSubmit.disabled = false;
-        alert('✅ OPR Berjaya Dijana & Dihantar!');
-      })
-      .catch(err => {
-        btnSubmit.textContent = "GENERATE OPR & SIMPAN";
-        btnSubmit.disabled = false;
-        alert('✅ OPR Berjaya Dijana pada Pratonton Canvas!');
-      });
+      }
     });
   }
 }
