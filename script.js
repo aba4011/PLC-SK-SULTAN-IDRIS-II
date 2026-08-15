@@ -14,38 +14,38 @@ document.addEventListener('DOMContentLoaded', () => {
   setupFormSubmit();
   setupPrintHandler();
   setupDriveButton();
-  setupLivePreview(); // Menyenaraikan semua input untuk real-time update
+  setupLivePreview(); // Pratonton real-time (langsung)
 });
 
 // ==========================================
 // 1. MUAT SENARAI NAMA GURU DARI APPS SCRIPT
 // ==========================================
 function loadTeacherNames() {
+  console.log("Sedang memuatkan senarai nama guru dari Apps Script...");
+
   fetch(`${SCRIPT_URL}?action=getTeachers`, {
     method: 'GET',
+    mode: 'cors',
     redirect: 'follow'
   })
-    .then(res => {
-      if (!res.ok) throw new Error("Respons rangkaian tidak OK");
-      return res.json();
-    })
+    .then(res => res.json())
     .then(res => {
       console.log("Data guru berjaya diterima:", res);
       if (res.status === 'success' && Array.isArray(res.data) && res.data.length > 0) {
         window.teacherList = res.data;
         populateTeacherDropdowns(res.data);
       } else {
-        console.warn("Senarai guru kosong dari Apps Script. Membuka fallback manual.");
-        enableManualInputFallback();
+        console.warn("Data diterima tetapi senarai guru kosong.");
       }
     })
     .catch(err => {
       console.error("Ralat muat nama guru:", err);
-      enableManualInputFallback();
+      // Cuba semula secara automatik selepas 2 saat jika capaian internet lambat
+      setTimeout(loadTeacherNames, 2000);
     });
 }
 
-// Masukkan senarai nama ke dalam <select class="teacher-dropdown">
+// Masukkan senarai nama ke dalam elemen <select class="teacher-dropdown">
 function populateTeacherDropdowns(teachers) {
   const dropdowns = document.querySelectorAll('.teacher-dropdown');
   dropdowns.forEach(select => {
@@ -68,26 +68,8 @@ function populateTeacherDropdowns(teachers) {
     if (currentVal) select.value = currentVal;
   });
 
-  // Jalankan kemaskini canvas selepas senarai dimuatkan
+  // Kemaskini pratonton kanvas selepas senarai dimasukkan
   updateCanvasPreview();
-}
-
-// MOD KECEMASAN: Jika Google Sheet gagal/tersekat, tukar dropdown jadi input teks biasa
-function enableManualInputFallback() {
-  const dropdowns = document.querySelectorAll('.teacher-dropdown');
-  dropdowns.forEach(select => {
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.id = select.id;
-    input.name = select.name;
-    input.className = select.className;
-    input.required = select.required;
-    input.placeholder = "Taip nama di sini (Mod Manual)...";
-    
-    select.parentNode.replaceChild(input, select);
-  });
-  
-  setupLivePreview();
 }
 
 // ==========================================
@@ -184,24 +166,19 @@ function setupDynamicAhli() {
       div.className = 'input-with-btn';
       div.style.marginTop = '6px';
       
+      let optionsHtml = '<option value="">-- Pilih Ahli --</option>';
       if (window.teacherList && window.teacherList.length > 0) {
-        let optionsHtml = '<option value="">-- Pilih Ahli --</option>';
         window.teacherList.forEach(t => optionsHtml += `<option value="${t}">${t}</option>`);
-
-        div.innerHTML = `
-          <select class="ahli-input teacher-dropdown" name="ahliKumpulan[]" required>${optionsHtml}</select>
-          <button type="button" class="btn-remove" style="background:#d32f2f; color:#fff; border:none; padding:6px 10px; border-radius:5px; margin-left:6px; cursor:pointer; font-weight:bold;">✕</button>
-        `;
-      } else {
-        div.innerHTML = `
-          <input type="text" class="ahli-input" name="ahliKumpulan[]" placeholder="Taip nama ahli..." required>
-          <button type="button" class="btn-remove" style="background:#d32f2f; color:#fff; border:none; padding:6px 10px; border-radius:5px; margin-left:6px; cursor:pointer; font-weight:bold;">✕</button>
-        `;
       }
+
+      div.innerHTML = `
+        <select class="ahli-input teacher-dropdown" name="ahliKumpulan[]" required>${optionsHtml}</select>
+        <button type="button" class="btn-remove" style="background:#d32f2f; color:#fff; border:none; padding:6px 10px; border-radius:5px; margin-left:6px; cursor:pointer; font-weight:bold;">✕</button>
+      `;
 
       container.appendChild(div);
 
-      // Padam baris ahli dan kemaskini preview secara automatik
+      // Padam baris ahli & kemaskini preview secara automatik
       div.querySelector('.btn-remove').addEventListener('click', () => {
         div.remove();
         updateCanvasPreview();
@@ -245,7 +222,6 @@ function setupFormSubmit() {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      // Kemaskini preview sekali lagi sebelum hantar
       updateCanvasPreview();
 
       const strategi = document.getElementById('strategiPlc').value;
