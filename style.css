@@ -158,14 +158,14 @@ textarea { resize: vertical; }
 .preview-toolbar { margin-bottom: 15px; display: flex; gap: 10px; }
 
 /* ==========================================
-   FIXED A4 CANVAS SETUP (EXACT GAMBAR 2 MATCH)
+   FIXED A4 CANVAS SETUP (SEPADAN REKABENTUK IMEJ 2)
    ========================================== */
 .a4-page {
   width: 210mm;
   height: 297mm;
   background: var(--white);
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  padding: 0 10mm 0 10mm !important; /* Margin bawah 0 supaya footer melekat di dasar */
+  padding: 0 12mm 0 12mm !important;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -175,24 +175,24 @@ textarea { resize: vertical; }
 
 /* JALUR BIRU GELAP PALING ATAS */
 .top-navy-bar {
-  width: calc(100% + 20mm);
+  width: calc(100% + 24mm);
   height: 12px;
   background-color: #0f1035 !important;
-  margin-left: -10mm;
-  margin-right: -10mm;
-  margin-bottom: 4px;
+  margin-left: -12mm;
+  margin-right: -12mm;
+  margin-bottom: 6px;
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
 }
 
-/* HEADER & LOGO POSITIONING */
+/* HEADER & LOGO */
 .opr-header {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .opr-logo {
@@ -210,29 +210,29 @@ textarea { resize: vertical; }
   text-align: center;
 }
 
-/* TAJUK SEKOLAH */
+/* TAJUK SEKOLAH SAMA IMEJ 2 */
 .school-title {
   font-family: 'Cinzel', serif;
   font-size: 26pt !important;
-  font-weight: bold;
+  font-weight: 700;
   color: #111;
   line-height: 1.0;
   letter-spacing: 0.5px;
   margin: 0;
-  transform: scaleY(1.15);
+  transform: scaleY(1.1);
 }
 
 .ornament-divider {
-  width: 60%;
+  width: 65%;
   height: 1.5px;
   background: linear-gradient(to right, transparent, #c9a13b, #0f1035, #c9a13b, transparent);
-  margin: 4px auto;
+  margin: 3px auto;
 }
 
 .school-address {
   font-size: 8.5pt !important;
   font-weight: 600;
-  color: #222;
+  color: #333;
   letter-spacing: 0.2px;
   margin: 0;
   line-height: 1.1;
@@ -249,74 +249,148 @@ textarea { resize: vertical; }
 .opr-main-title {
   font-family: 'Cinzel', serif;
   font-size: 22pt !important;
-  font-weight: bold;
+  font-weight: 700;
   color: #111;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   line-height: 1.0;
-  margin-top: 3px;
-  margin-bottom: 1px;
-  transform: scaleY(1.15);
+  margin-top: 4px;
+  margin-bottom: 2px;
+  transform: scaleY(1.1);
 }
 
-.opr-by {
-  font-size: 8.5pt !important;
+.opr-strategi-label {
+  font-size: 9.5pt !important;
   font-weight: 600;
-  color: #1b1b50;
-  margin-top: 1px;
+  color: #55547a;
+  text-align: left;
+  margin-left: 105px; /* Alignment persis Imej 2 */
+  margin-top: 2px;
   margin-bottom: 4px;
 }
 
-/* KAD UTAMA OPR */
+/* KAD UTAMA OPR IMEJ 2 (HERO BANNER) */
 .opr-main-panel {
-  border-radius: 8px !important;
-  padding: 10px !important;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px !important;
+  padding: 12px 14px !important;
   color: var(--white) !important;
   display: flex;
-  gap: 10px;
-  min-height: 86mm !important;
-  margin-bottom: 6px;
+  gap: 12px;
+  min-height: 88mm !important;
+  margin-bottom: 12px;
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
 }
 
-.panel-info { flex: 1.1; font-size: 8.5pt; color: var(--white); }
+.bg-card-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.bg-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(18, 14, 55, 0.88); /* Warna gelap persis Imej 2 */
+  z-index: 2;
+}
+
+.panel-info {
+  position: relative;
+  z-index: 3;
+  flex: 1.1;
+  font-size: 8.5pt;
+  color: var(--white);
+}
+
 .panel-info h3 {
+  font-family: 'Cinzel', serif;
   color: var(--gold);
-  font-size: 11pt !important;
-  margin-bottom: 6px;
-  border-bottom: 1px solid var(--gold);
-  padding-bottom: 3px;
+  font-size: 18pt !important;
   font-weight: 700;
+  margin-bottom: 4px;
+  line-height: 1.1;
 }
-.panel-info p {
+
+.gold-line {
+  width: 100%;
+  height: 1.5px;
+  background-color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.info-line {
   font-size: 8.5pt !important;
-  line-height: 1.35;
+  line-height: 1.4;
   margin-bottom: 2px;
+  color: #ffffff;
 }
 
-.pv-ahli-wrapper { margin-top: 4px; }
-.pv-ahli-list { padding-left: 15px; font-size: 8pt; max-height: 38mm; overflow: hidden; }
+.pv-ahli-wrapper {
+  margin-top: 4px;
+}
 
-.panel-photos { flex: 0.9; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 6px; }
+.pv-ahli-list {
+  list-style-type: none;
+  padding-left: 10px;
+  font-size: 8.5pt;
+  max-height: 42mm;
+  overflow: hidden;
+}
+
+.pv-ahli-list li {
+  line-height: 1.35;
+  color: #ffffff;
+}
+
+/* PETAK GAMBAR (DESIGN IMEJ 2 WITH ROUNDED CORNERS) */
+.panel-photos {
+  position: relative;
+  z-index: 3;
+  flex: 0.9;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+}
+
 .photo-slot {
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px dashed var(--gold);
-  border-radius: 4px;
+  background: #e3f2fd; /* Biru cair placeholder persis Imej 2 */
+  border: none;
+  border-radius: 10px !important;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
 }
-.photo-slot img { width: 100%; height: 100%; object-fit: cover; }
-.ph-label { font-size: 7.5pt; color: #ddd; }
 
-/* BAHAGIAN KOTAK LAPORAN (ROUNDED GOLDEN BADGES SEPERTI GAMBAR 2) */
+.photo-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.ph-label {
+  display: none;
+}
+
+/* BAHAGIAN KOTAK LAPORAN (BADGES SEPERTI IMEJ 2) */
 .opr-boxes-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 15px 20px !important;
-  margin-top: 10px;
-  flex: 1; /* Mengisi ruang kosong ke bawah secara automatik */
+  gap: 12px 24px !important;
+  margin-top: 5px;
+  flex: 1; /* Mengisi ruang kosong ke bawah */
   align-content: start;
 }
 
@@ -324,14 +398,17 @@ textarea { resize: vertical; }
   border: none !important;
   background: transparent !important;
   padding: 0 !important;
-  min-height: auto !important;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
-/* BADGE TAJUK KOTAK (ROUNDED GOLDEN BADGE SEPERTI GAMBAR 2) */
-.opr-box h4 {
+.opr-box.box-empty {
+  visibility: hidden; /* Membiarkan ruang kanan bawah kosong persis Imej 2 */
+}
+
+/* BADGE TAJUK KOTAK (ROUNDED GOLDEN BADGE EXACT MATCH IMEJ 2) */
+.badge-title {
   display: inline-block;
   font-family: 'Roboto Condensed', 'Arial Narrow', sans-serif;
   font-size: 11pt !important;
@@ -340,54 +417,60 @@ textarea { resize: vertical; }
   background: #ffffff !important;
   border: 1.5px solid #c9a13b !important;
   border-radius: 6px !important;
-  padding: 3px 16px !important;
+  padding: 4px 20px !important;
   margin: 0 0 6px 0 !important;
   text-align: center;
   letter-spacing: 0.5px;
   text-transform: uppercase;
+  min-width: 160px;
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
+}
+
+.badge-tindakan {
+  text-transform: none !important; /* "Tindakan Susulan" dalam Sentence Case seperti Imej 2 */
+  font-family: 'Montserrat', sans-serif !important;
 }
 
 /* TEKS KANDUNGAN DI BAWAH BADGE */
 .box-content {
   font-size: 9.5pt !important;
-  line-height: 1.4;
-  color: #111;
+  line-height: 1.45;
+  color: #222222;
   width: 100%;
   white-space: pre-wrap;
   word-break: break-word;
-  padding-left: 2px;
+  padding-left: 4px;
 }
 
 /* TEKS "DISEDIAKAN OLEH" DI TENGAH-TENGAH (CENTERED) */
 .opr-signature {
-  margin-top: auto; /* Menolak bahagian ini ke bawah rapat dengan footer */
-  margin-bottom: 12px;
+  margin-top: auto; /* Push rapat ke atas footer */
+  margin-bottom: 10px;
   font-size: 9pt;
   text-align: center;
-  color: #3b3164;
-  font-family: 'Cinzel', Georgia, serif;
+  color: #444;
+  font-family: sans-serif;
 }
 
 .sig-name {
-  font-weight: bold;
+  font-weight: 600;
   margin-top: 2px;
-  color: #0f1035;
+  color: #111;
 }
 
-/* JALUR BIRU GELAP FOOTER DI PALING DASAR KERTAS (BOTTOM BLEED) */
+/* JALUR BIRU GELAP FOOTER DI PALING DASAR KERTAS */
 .opr-footer {
-  width: calc(100% + 20mm) !important;
+  width: calc(100% + 24mm) !important;
   background-color: #0f1035 !important;
   color: #ffffff !important;
   text-align: center;
-  font-size: 9.5pt !important;
-  font-weight: bold;
+  font-size: 9pt !important;
+  font-weight: 700;
   letter-spacing: 2px;
   padding: 8px 0;
-  margin-left: -10mm !important;
-  margin-right: -10mm !important;
+  margin-left: -12mm !important;
+  margin-right: -12mm !important;
   margin-top: 0;
   margin-bottom: 0 !important;
   -webkit-print-color-adjust: exact !important;
