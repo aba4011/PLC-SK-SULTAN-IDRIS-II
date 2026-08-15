@@ -204,8 +204,12 @@
           <p class="opr-strategy"><strong>Strategi PLC:</strong> <span id="pvStrategi">Discussion Protocols</span></p>
         </div>
 
-        <div class="opr-main-panel">
-          <div class="panel-info">
+        <!-- MAIN PANEL WITH HTML BACKGROUND IMAGE OVERLAY -->
+        <div class="opr-main-panel" style="position: relative; overflow: hidden;">
+          <img src="bg-sekolah.jpg" class="bg-card-img" style="position: absolute; top:0; left:0; width:100%; height:100%; object-fit: cover; z-index: 1;" alt="Latar Belakang Sekolah">
+          <div class="bg-card-overlay" style="position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(20, 26, 60, 0.85); z-index: 2;"></div>
+
+          <div class="panel-info" style="position: relative; z-index: 3;">
             <h3 id="pvTajuk">TAJUK PLC AKAN DIPAPARKAN DI SINI</h3>
             <p><strong>Tarikh/Masa:</strong> <span id="pvTarikhMasa">-</span></p>
             <p><strong>Tempat:</strong> <span id="pvTempat">-</span></p>
@@ -217,7 +221,7 @@
             </div>
           </div>
 
-          <div class="panel-photos">
+          <div class="panel-photos" style="position: relative; z-index: 3;">
             <div class="photo-slot" id="slot1"><span class="ph-label">Gambar 1</span></div>
             <div class="photo-slot" id="slot2"><span class="ph-label">Gambar 2</span></div>
             <div class="photo-slot" id="slot3"><span class="ph-label">Gambar 3</span></div>
